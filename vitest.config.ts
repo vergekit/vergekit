@@ -16,6 +16,7 @@ const astroViteConfig = getViteConfig(
     },
   },
   {
+    output: 'server',
     root,
     configFile: false,
   },
