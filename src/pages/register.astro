@@ -1,0 +1,70 @@
+---
+import { UserPlus } from '@lucide/astro';
+import AuthShell from '@/components/auth/AuthShell.astro';
+import Button from '@/components/ui/Button.astro';
+import Field from '@/components/ui/Field.astro';
+import Input from '@/components/ui/Input.astro';
+---
+
+<AuthShell
+  title="Create your account"
+  eyebrow="Start secure"
+  description="Create a secure workspace account."
+>
+  <div class="mb-8 hidden lg:block">
+    <h2 class="text-2xl font-semibold tracking-normal text-slate-950">
+      Register
+    </h2>
+    <p class="mt-2 text-sm leading-6 text-slate-600">
+      Set up your profile with email and password credentials.
+    </p>
+  </div>
+
+  <form method="post" action="/api/auth/sign-up/email" class="space-y-5">
+    <input type="hidden" name="callbackURL" value="/dashboard" />
+
+    <Field id="register-name" label="Name" required>
+      <Input
+        id="register-name"
+        name="name"
+        autocomplete="name"
+        placeholder="Ada Lovelace"
+        required
+      />
+    </Field>
+
+    <Field id="register-email" label="Email" required>
+      <Input
+        id="register-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        placeholder="you@example.com"
+        required
+      />
+    </Field>
+
+    <Field id="register-password" label="Password" required>
+      <Input
+        id="register-password"
+        name="password"
+        type="password"
+        autocomplete="new-password"
+        minlength="8"
+        required
+      />
+    </Field>
+
+    <Button type="submit" fullWidth>
+      <UserPlus size={18} aria-hidden="true" />
+      Create account
+    </Button>
+  </form>
+
+  <p class="mt-6 text-center text-sm text-slate-600">
+    Already registered?
+    <a href="/login" class="font-medium text-slate-950 hover:text-emerald-700">
+      Sign in
+    </a>
+  </p>
+</AuthShell>

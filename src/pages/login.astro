@@ -1,0 +1,84 @@
+---
+import { LogIn } from '@lucide/astro';
+import AuthShell from '@/components/auth/AuthShell.astro';
+import Button from '@/components/ui/Button.astro';
+import Field from '@/components/ui/Field.astro';
+import Input from '@/components/ui/Input.astro';
+
+const redirectTo = Astro.url.searchParams.get('redirectTo') ?? '/dashboard';
+---
+
+<AuthShell
+  title="Sign in to VK"
+  eyebrow="Welcome back"
+  description="Secure access for your workspace."
+>
+  <div class="mb-8 hidden lg:block">
+    <h2 class="text-2xl font-semibold tracking-normal text-slate-950">
+      Sign in
+    </h2>
+    <p class="mt-2 text-sm leading-6 text-slate-600">
+      Continue with your account credentials.
+    </p>
+  </div>
+
+  <form method="post" action="/api/auth/sign-in/email" class="space-y-5">
+    <input type="hidden" name="callbackURL" value={redirectTo} />
+
+    <Field id="login-email" label="Email" required>
+      <Input
+        id="login-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        placeholder="you@example.com"
+        required
+      />
+    </Field>
+
+    <Field id="login-password" label="Password" required>
+      <Input
+        id="login-password"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      />
+    </Field>
+
+    <div class="flex items-center justify-between gap-4 text-sm">
+      <label class="inline-flex items-center gap-2 text-slate-600">
+        <input
+          type="checkbox"
+          name="rememberMe"
+          value="true"
+          checked
+          class="size-4 rounded border-slate-300 text-slate-950 focus:ring-slate-400"
+        />
+        Remember me
+      </label>
+
+      <a
+        href="/auth/forgot-password"
+        class="font-medium text-slate-950 hover:text-emerald-700"
+      >
+        Forgot password?
+      </a>
+    </div>
+
+    <Button type="submit" fullWidth>
+      <LogIn size={18} aria-hidden="true" />
+      Sign in
+    </Button>
+  </form>
+
+  <p class="mt-6 text-center text-sm text-slate-600">
+    New here?
+    <a
+      href="/register"
+      class="font-medium text-slate-950 hover:text-emerald-700"
+    >
+      Create an account
+    </a>
+  </p>
+</AuthShell>

@@ -1,0 +1,77 @@
+---
+import { CircleUserRound, Database, LogOut, ShieldCheck } from '@lucide/astro';
+import Button from '@/components/ui/Button.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const user = Astro.locals.user;
+const session = Astro.locals.session;
+const displayName = user?.name || user?.email || 'Authenticated user';
+const sessionExpiresAt = session?.expiresAt
+  ? new Intl.DateTimeFormat('en', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(session.expiresAt)
+  : 'Active session';
+---
+
+<BaseLayout title="Dashboard | VK">
+  <main class="min-h-screen bg-slate-50 text-slate-950">
+    <header class="border-b border-slate-200 bg-white">
+      <div
+        class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8"
+      >
+        <a href="/" class="inline-flex items-center gap-3 font-semibold">
+          <span
+            class="flex size-10 items-center justify-center rounded-lg bg-slate-950 text-white"
+          >
+            <ShieldCheck size={20} aria-hidden="true" />
+          </span>
+          VK
+        </a>
+
+        <form method="post" action="/api/auth/sign-out">
+          <Button type="submit" variant="secondary" size="sm">
+            <LogOut size={16} aria-hidden="true" />
+            Sign out
+          </Button>
+        </form>
+      </div>
+    </header>
+
+    <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <section
+        class="grid gap-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm md:grid-cols-[1.15fr_0.85fr]"
+      >
+        <div>
+          <p class="text-sm font-medium text-emerald-700">Authenticated</p>
+          <h1
+            class="mt-3 text-3xl font-semibold tracking-normal text-slate-950"
+          >
+            {displayName}
+          </h1>
+          <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+            Your account is active.
+          </p>
+        </div>
+
+        <div class="grid gap-3 text-sm">
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <div class="flex items-center gap-3 font-medium text-slate-950">
+              <CircleUserRound size={18} aria-hidden="true" />
+              Account
+            </div>
+            <p class="mt-2 text-slate-600">{user?.email ?? 'No email found'}</p>
+          </div>
+
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <div class="flex items-center gap-3 font-medium text-slate-950">
+              <Database size={18} aria-hidden="true" />
+              Session
+            </div>
+            <p class="mt-2 text-slate-600">{sessionExpiresAt}</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
