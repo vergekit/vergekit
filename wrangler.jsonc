@@ -11,6 +11,11 @@
     "DATABASE_TARGET": "d1",
     "EMAIL_PROVIDER": "console",
   },
+  "send_email": [
+    {
+      "name": "EMAIL",
+    },
+  ],
   "d1_databases": [
     {
       "binding": "DB",

@@ -7,6 +7,12 @@ declare namespace Cloudflare {
     APP_NAME: string;
     DATABASE_TARGET: 'd1';
     EMAIL_PROVIDER: string;
+    EMAIL?: SendEmail;
+    EMAIL_FROM?: string;
+    EMAIL_REPLY_TO?: string;
+    RESEND_API_KEY?: string;
+    MAILGUN_API_KEY?: string;
+    MAILGUN_DOMAIN?: string;
     BETTER_AUTH_SECRET?: string;
     BETTER_AUTH_URL?: string;
   }

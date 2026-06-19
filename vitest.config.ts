@@ -1,15 +1,32 @@
 import { fileURLToPath, URL } from 'node:url';
-import { defineConfig } from 'vitest/config';
+import { getViteConfig } from 'astro/config';
+import { defineConfig, mergeConfig } from 'vitest/config';
 
-export default defineConfig({
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+const root = fileURLToPath(new URL('.', import.meta.url));
+
+const astroViteConfig = getViteConfig(
+  {
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    },
+    ssr: {
+      noExternal: ['@backstro/email'],
     },
   },
-  test: {
-    environment: 'happy-dom',
-    include: ['tests/**/*.test.ts', 'src/**/*.test.ts'],
-    passWithNoTests: true,
+  {
+    root,
+    configFile: false,
   },
-});
+);
+
+export default defineConfig(async (env) =>
+  mergeConfig(await astroViteConfig(env), {
+    test: {
+      environment: 'node',
+      include: ['tests/**/*.test.ts', 'src/**/*.test.ts'],
+      passWithNoTests: true,
+    },
+  }),
+);

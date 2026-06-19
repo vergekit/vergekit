@@ -2,14 +2,20 @@ import { drizzleAdapter } from '@better-auth/drizzle-adapter';
 import { betterAuth, type BetterAuthOptions } from 'better-auth';
 import { createD1Database, type AppDatabase } from '@/db/client';
 import * as schema from '@/db/schema';
+import {
+  createAuthEmailSenderFromEnv,
+  type AuthEmailSender,
+  type EmailRuntimeEnv,
+} from '@/email/send';
 
 export interface CreateAuthOptions {
   database: AppDatabase;
   baseURL: string;
   secret: string;
+  authEmail?: AuthEmailSender;
 }
 
-export interface AuthRuntimeEnv {
+export interface AuthRuntimeEnv extends EmailRuntimeEnv {
   DB: D1Database;
   BETTER_AUTH_SECRET?: string;
   BETTER_AUTH_URL?: string;
@@ -19,7 +25,22 @@ export function buildAuthOptions({
   database,
   baseURL,
   secret,
+  authEmail,
 }: CreateAuthOptions): BetterAuthOptions {
+  const emailAndPassword: BetterAuthOptions['emailAndPassword'] = {
+    enabled: true,
+  };
+
+  if (authEmail) {
+    emailAndPassword.sendResetPassword = async ({ user, url }) => {
+      await authEmail.sendResetPasswordEmail({
+        to: user.email,
+        name: user.name,
+        url,
+      });
+    };
+  }
+
   return {
     baseURL,
     secret,
@@ -27,9 +48,19 @@ export function buildAuthOptions({
       provider: 'sqlite',
       schema,
     }),
-    emailAndPassword: {
-      enabled: true,
-    },
+    emailAndPassword,
+    emailVerification: authEmail
+      ? {
+          sendOnSignUp: true,
+          sendVerificationEmail: async ({ user, url }) => {
+            await authEmail.sendVerificationEmail({
+              to: user.email,
+              name: user.name,
+              url,
+            });
+          },
+        }
+      : undefined,
   };
 }
 
@@ -70,5 +101,6 @@ export function createAuthFromEnv(
     database: createD1Database(runtimeEnv.DB),
     baseURL: resolveAuthBaseURL(runtimeEnv, request),
     secret: resolveAuthSecret(runtimeEnv),
+    authEmail: createAuthEmailSenderFromEnv(runtimeEnv),
   });
 }
