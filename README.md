@@ -35,7 +35,14 @@ Install dependencies:
 npm install
 ```
 
-Create local runtime secrets:
+Create local runtime secrets. For first-time setup, this copies the template and
+writes a fresh Better Auth secret:
+
+```bash
+cp .dev.vars.example .dev.vars && secret="$(openssl rand -base64 32)" && awk -v secret="$secret" 'BEGIN { done = 0 } /^BETTER_AUTH_SECRET=/ { print "BETTER_AUTH_SECRET=" secret; done = 1; next } { print } END { if (!done) print "BETTER_AUTH_SECRET=" secret }' .dev.vars > .dev.vars.tmp && mv .dev.vars.tmp .dev.vars
+```
+
+Or do the same manually:
 
 ```bash
 cp .dev.vars.example .dev.vars
