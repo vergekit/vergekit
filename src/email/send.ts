@@ -10,6 +10,7 @@ import type {
   EmailProviderName,
   Fetcher,
   SendEmailInput,
+  SendEmailResult,
 } from './types';
 
 export interface EmailRuntimeEnv {
@@ -58,6 +59,14 @@ export interface CreateAuthEmailSenderOptions {
   from: SendEmailInput['from'];
   mailer: EmailProvider;
   replyTo?: SendEmailInput['replyTo'];
+}
+
+export async function sendEmail(
+  runtimeEnv: EmailRuntimeEnv,
+  input: SendEmailInput,
+  options?: CreateMailerFromEnvOptions,
+): Promise<SendEmailResult> {
+  return createMailerFromEnv(runtimeEnv, options).send(input);
 }
 
 export function createMailerFromEnv(

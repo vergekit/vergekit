@@ -15,7 +15,7 @@ plain Tailwind UI base.
 - Better Auth with email/password, email verification, reset password, and D1
   storage.
 - Middleware that loads auth state into typed `Astro.locals`.
-- Route guards for public pages, protected pages, and protected API routes.
+- Public-by-default route auth with opt-in protected pages and APIs.
 - Email provider abstraction for console, Cloudflare Email, Resend, Mailgun, and
   explicit Node SMTP usage.
 - Auth email templates rendered with `@backstro/email`.
@@ -89,6 +89,11 @@ Astro Cloudflare adapter; no separate Miniflare config is required after
 `npm install`. See [D1 Setup](docs/setup/d1.md) for production database setup
 and alternate local or Cloudflare-hosted dev database options.
 
+All routes are public until they opt into auth. Add protected exact paths or URL
+prefixes in `src/auth/routes.ts`, or check `Astro.locals.isAuthenticated`
+inside a specific page or route handler. See
+[Route Authentication](docs/setup/auth-routes.md) for examples.
+
 Start the app:
 
 ```bash
@@ -131,6 +136,9 @@ Supported provider names:
 
 `smtp-node` is for explicit Node usage. Cloudflare Workers should use
 Cloudflare Email, Resend, Mailgun, or another fetch/binding-based provider.
+
+For direct `sendEmail` examples, provider requirements, auth-email helpers, and
+testing notes, see [Email Sending](docs/setup/email.md).
 
 ## Runtime Configuration
 

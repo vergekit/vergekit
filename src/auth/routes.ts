@@ -4,21 +4,13 @@ export const SIGN_OUT_PATH = `${AUTH_API_PREFIX}/sign-out`;
 
 export type RouteAccessDecision =
   | { type: 'allow' }
-  | { type: 'redirect'; location: string }
-  | { type: 'unauthorized' };
+  | { type: 'redirect'; location: string };
 
-const publicExactPaths = new Set([
-  '/',
-  LOGIN_PATH,
-  '/register',
-  '/auth/forgot-password',
-  '/auth/reset-password',
-  '/auth/verify-email',
-  '/favicon.svg',
-  '/robots.txt',
-]);
+const protectedExactPaths = new Set(['/dashboard']);
 
-const publicPrefixes = ['/_astro/', '/assets/'];
+const protectedPrefixes: string[] = [
+  // Add path prefixes that require authentication, e.g. '/settings/' or '/api/account/'.
+];
 
 function getRoutePathname(routePath: string) {
   return new URL(routePath, 'https://vk.local').pathname;
@@ -111,14 +103,14 @@ export async function resolveSignOutRedirectPath(request: Request) {
   return '/';
 }
 
-export function isPublicRoute(routePath: string) {
+export function isProtectedRoute(routePath: string) {
   const pathname = getRoutePathname(routePath);
 
-  if (isAuthApiRoute(pathname) || publicExactPaths.has(pathname)) {
+  if (protectedExactPaths.has(pathname)) {
     return true;
   }
 
-  return publicPrefixes.some((prefix) => pathname.startsWith(prefix));
+  return protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
 }
 
 export function getLoginRedirectPath(destination: string) {
@@ -131,12 +123,8 @@ export function resolveRouteAccess(
 ): RouteAccessDecision {
   const pathname = getRoutePathname(routePath);
 
-  if (isPublicRoute(pathname) || isAuthenticated) {
+  if (!isProtectedRoute(pathname) || isAuthenticated) {
     return { type: 'allow' };
-  }
-
-  if (pathname.startsWith('/api/')) {
-    return { type: 'unauthorized' };
   }
 
   return {

@@ -21,9 +21,5 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  if (access.type === 'unauthorized') {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
   return context.redirect(access.location);
 });

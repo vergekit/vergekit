@@ -4,14 +4,17 @@ import { resolveRouteAccess } from '@/auth/routes';
 describe('resolveRouteAccess', () => {
   it('allows public paths without a session', () => {
     expect(resolveRouteAccess('/', false)).toEqual({ type: 'allow' });
+    expect(resolveRouteAccess('/about', false)).toEqual({ type: 'allow' });
     expect(resolveRouteAccess('/api/auth/sign-in', false)).toEqual({
+      type: 'allow',
+    });
+    expect(resolveRouteAccess('/api/health', false)).toEqual({
       type: 'allow',
     });
   });
 
   it('allows protected paths with a session', () => {
     expect(resolveRouteAccess('/dashboard', true)).toEqual({ type: 'allow' });
-    expect(resolveRouteAccess('/api/private', true)).toEqual({ type: 'allow' });
   });
 
   it('redirects unauthenticated page requests to login', () => {
@@ -25,9 +28,9 @@ describe('resolveRouteAccess', () => {
     });
   });
 
-  it('returns unauthorized for unauthenticated non-auth API requests', () => {
+  it('allows API routes without a session', () => {
     expect(resolveRouteAccess('/api/private', false)).toEqual({
-      type: 'unauthorized',
+      type: 'allow',
     });
   });
 });

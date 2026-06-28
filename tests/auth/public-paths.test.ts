@@ -6,12 +6,12 @@ import {
   createSignOutAuthRequest,
   getLoginRedirectPath,
   isAuthApiRoute,
-  isPublicRoute,
+  isProtectedRoute,
   resolveSignOutRedirectPath,
   shouldRedirectSignOutRequest,
 } from '@/auth/routes';
 
-describe('auth public route policy', () => {
+describe('auth protected route policy', () => {
   it('keeps the Better Auth API route surface public', () => {
     expect(AUTH_API_PREFIX).toBe('/api/auth');
     expect(isAuthApiRoute('/api/auth')).toBe(true);
@@ -20,20 +20,27 @@ describe('auth public route policy', () => {
     expect(isAuthApiRoute('/api/auth/callback/google?code=abc')).toBe(true);
   });
 
-  it('keeps app bootstrap and future auth form paths public', () => {
-    expect(isPublicRoute('/')).toBe(true);
-    expect(isPublicRoute('/_astro/client.js')).toBe(true);
-    expect(isPublicRoute('/favicon.svg')).toBe(true);
-    expect(isPublicRoute('/login')).toBe(true);
-    expect(isPublicRoute('/register')).toBe(true);
-    expect(isPublicRoute('/auth/forgot-password')).toBe(true);
-    expect(isPublicRoute('/login?redirectTo=%2Fdashboard')).toBe(true);
+  it('treats pages as public by default', () => {
+    expect(isProtectedRoute('/')).toBe(false);
+    expect(isProtectedRoute('/about')).toBe(false);
+    expect(isProtectedRoute('/_astro/client.js')).toBe(false);
+    expect(isProtectedRoute('/favicon.svg')).toBe(false);
+    expect(isProtectedRoute('/login')).toBe(false);
+    expect(isProtectedRoute('/register')).toBe(false);
+    expect(isProtectedRoute('/auth/forgot-password')).toBe(false);
+    expect(isProtectedRoute('/login?redirectTo=%2Fdashboard')).toBe(false);
   });
 
-  it('treats application pages and non-auth APIs as protected by default', () => {
-    expect(isPublicRoute('/dashboard')).toBe(false);
-    expect(isPublicRoute('/settings/profile')).toBe(false);
-    expect(isPublicRoute('/api/private')).toBe(false);
+  it('requires auth for explicitly protected pages', () => {
+    expect(isProtectedRoute('/dashboard')).toBe(true);
+    expect(isProtectedRoute('/settings/profile')).toBe(false);
+  });
+
+  it('treats API routes as public by default', () => {
+    expect(isProtectedRoute('/api/auth/sign-in')).toBe(false);
+    expect(isProtectedRoute('/api/health')).toBe(false);
+    expect(isProtectedRoute('/api/debug/email')).toBe(false);
+    expect(isProtectedRoute('/api/private')).toBe(false);
   });
 
   it('builds a login redirect with the original destination preserved', () => {

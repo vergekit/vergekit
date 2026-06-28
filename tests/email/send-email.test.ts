@@ -9,6 +9,7 @@ import {
   createMailerFromEnv,
   renderResetPasswordEmail,
   renderVerifyEmail,
+  sendEmail,
 } from '@/email/send';
 import type { Fetcher, SendEmailInput } from '@/email/types';
 import type { AppDatabase } from '@/db/client';
@@ -106,6 +107,21 @@ describe('email providers', () => {
     expect(body.get('text')).toBe(message.text);
     expect(body.get('h:Reply-To')).toBe(message.replyTo);
     expect(result).toEqual({ provider: 'mailgun', id: '<mailgun-message-1>' });
+  });
+});
+
+describe('sendEmail', () => {
+  it('sends through the configured provider from runtime env', async () => {
+    const info = vi.fn();
+
+    const result = await sendEmail(
+      { APP_NAME: 'VK', EMAIL_PROVIDER: undefined },
+      message,
+      { console: { info } },
+    );
+
+    expect(info).toHaveBeenCalledWith('[email:console]', message);
+    expect(result).toEqual({ provider: 'console', id: 'console' });
   });
 });
 
