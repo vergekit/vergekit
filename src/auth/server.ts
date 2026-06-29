@@ -1,11 +1,12 @@
 import { drizzleAdapter } from '@better-auth/drizzle-adapter';
-import { betterAuth, type BetterAuthOptions } from 'better-auth';
+import { APIError, betterAuth, type BetterAuthOptions } from 'better-auth';
 import { admin as adminPlugin } from 'better-auth/plugins';
 import {
   ADMIN_APP_ROLES,
   DEFAULT_APP_ROLE,
   accessControl,
   authRoles,
+  isAppBannedUser,
 } from '@/auth/permissions';
 import { createD1Database, type AppDatabase } from '@/db/client';
 import * as schema from '@/db/schema';
@@ -27,6 +28,34 @@ export interface AuthRuntimeEnv extends EmailRuntimeEnv {
   BETTER_AUTH_SECRET?: string;
   BETTER_AUTH_URL?: string;
 }
+
+type DatabaseHooks = NonNullable<BetterAuthOptions['databaseHooks']>;
+type BeforeSessionCreate = NonNullable<
+  NonNullable<NonNullable<DatabaseHooks['session']>['create']>['before']
+>;
+
+export const blockAppBannedSession: BeforeSessionCreate = async (
+  session,
+  context,
+) => {
+  if (!context) {
+    return;
+  }
+
+  const user = await context.context.internalAdapter.findUserById(
+    session.userId,
+  );
+
+  if (!isAppBannedUser(user)) {
+    return;
+  }
+
+  throw APIError.from('FORBIDDEN', {
+    code: 'BANNED_USER',
+    message:
+      'You have been banned from this application. Please contact support if you believe this is an error.',
+  });
+};
 
 export function buildAuthOptions({
   database,
@@ -55,6 +84,13 @@ export function buildAuthOptions({
       provider: 'sqlite',
       schema,
     }),
+    databaseHooks: {
+      session: {
+        create: {
+          before: blockAppBannedSession,
+        },
+      },
+    },
     emailAndPassword,
     emailVerification: authEmail
       ? {

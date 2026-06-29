@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   buildAuthOptions,
   createAuth,
@@ -54,5 +54,51 @@ describe('Better Auth server config', () => {
     expect(() => resolveAuthSecret({})).toThrow(
       'BETTER_AUTH_SECRET is required',
     );
+  });
+
+  it('blocks session creation for users assigned the banned app role', async () => {
+    const options = buildAuthOptions({
+      database,
+      baseURL: 'https://vk.example.com',
+      secret: 'test-secret-with-at-least-32-characters',
+    });
+    const beforeSessionCreate = options.databaseHooks?.session?.create?.before;
+    const findUserById = vi.fn(async () => ({
+      id: 'user-1',
+      name: 'Banned User',
+      email: 'banned@example.com',
+      emailVerified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      role: 'banned',
+      banned: false,
+    }));
+
+    expect(beforeSessionCreate).toBeTypeOf('function');
+    await expect(
+      beforeSessionCreate!(
+        {
+          id: 'session-1',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          userId: 'user-1',
+          expiresAt: new Date(),
+          token: 'session-token',
+        },
+        {
+          context: {
+            internalAdapter: {
+              findUserById,
+            },
+          },
+        } as Parameters<NonNullable<typeof beforeSessionCreate>>[1],
+      ),
+    ).rejects.toMatchObject({
+      statusCode: 403,
+      body: {
+        code: 'BANNED_USER',
+      },
+    });
+    expect(findUserById).toHaveBeenCalledWith('user-1');
   });
 });
