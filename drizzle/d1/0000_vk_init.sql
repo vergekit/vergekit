@@ -1,3 +1,10 @@
+CREATE TABLE `app_settings` (
+	`key` text PRIMARY KEY NOT NULL,
+	`value` text NOT NULL,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE `account` (
 	`id` text PRIMARY KEY NOT NULL,
 	`accountId` text NOT NULL,
@@ -23,6 +30,7 @@ CREATE TABLE `session` (
 	`updatedAt` integer NOT NULL,
 	`ipAddress` text,
 	`userAgent` text,
+	`impersonatedBy` text,
 	`userId` text NOT NULL,
 	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
@@ -34,6 +42,10 @@ CREATE TABLE `user` (
 	`email` text NOT NULL,
 	`emailVerified` integer NOT NULL,
 	`image` text,
+	`role` text DEFAULT 'user',
+	`banned` integer DEFAULT false,
+	`banReason` text,
+	`banExpires` integer,
 	`createdAt` integer NOT NULL,
 	`updatedAt` integer NOT NULL
 );
