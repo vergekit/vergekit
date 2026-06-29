@@ -3,9 +3,10 @@ import {
   isAppBannedUser,
   userHasAppPermission,
 } from '@/auth/permissions';
+import { authRouteConfig } from '@/config/auth';
 
-export const AUTH_API_PREFIX = '/api/auth';
-export const LOGIN_PATH = '/login';
+export const AUTH_API_PREFIX = authRouteConfig.authApiPrefix;
+export const LOGIN_PATH = authRouteConfig.loginPath;
 export const SIGN_OUT_PATH = `${AUTH_API_PREFIX}/sign-out`;
 
 export type RouteAccessDecision =
@@ -18,36 +19,36 @@ export interface RouteAccessContext {
   user?: AppUserFields | null;
 }
 
-const protectedExactPaths = new Set(['/dashboard']);
-const adminExactPaths = new Set(['/admin']);
-
-const protectedPrefixes: string[] = [
-  // Add path prefixes that require authentication, e.g. '/settings/' or '/api/account/'.
-];
-const adminPrefixes = ['/admin/'];
+const protectedExactPaths = new Set<string>(
+  authRouteConfig.protectedExactPaths,
+);
+const adminExactPaths = new Set<string>(authRouteConfig.adminExactPaths);
+const protectedPrefixes = [...authRouteConfig.protectedPrefixes];
+const adminPrefixes = [...authRouteConfig.adminPrefixes];
 
 function getRoutePathname(routePath: string) {
-  return new URL(routePath, 'https://vk.local').pathname;
+  try {
+    return new URL(routePath).pathname;
+  } catch {
+    const pathEnd = routePath.search(/[?#]/);
+    const pathname = pathEnd === -1 ? routePath : routePath.slice(0, pathEnd);
+
+    return pathname || '/';
+  }
 }
 
 function resolveLocalRedirectPath(target: unknown, fallbackPath = '/') {
-  if (typeof target !== 'string' || !target.trim()) {
+  if (typeof target !== 'string') {
     return fallbackPath;
   }
 
-  let redirectURL: URL;
+  const redirectPath = target.trim();
 
-  try {
-    redirectURL = new URL(target, 'https://vk.local');
-  } catch {
+  if (!redirectPath.startsWith('/') || redirectPath.startsWith('//')) {
     return fallbackPath;
   }
 
-  if (redirectURL.origin !== 'https://vk.local') {
-    return fallbackPath;
-  }
-
-  return `${redirectURL.pathname}${redirectURL.search}${redirectURL.hash}`;
+  return redirectPath;
 }
 
 export function isAuthApiRoute(routePath: string) {
@@ -169,7 +170,9 @@ export function resolveRouteAccess(
 
   if (
     isAdminPath &&
-    !userHasAppPermission(context.user, { app: ['administer'] })
+    !userHasAppPermission(context.user, {
+      app: [...authRouteConfig.adminPermission.app],
+    })
   ) {
     return { type: 'forbidden' };
   }

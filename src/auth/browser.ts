@@ -1,3 +1,5 @@
+import { appConfig } from '@/config/app';
+
 export const DEFAULT_AUTH_ERROR_MESSAGE =
   "We couldn't complete that request. Check the fields and try again.";
 
@@ -121,7 +123,9 @@ async function parseAuthResponse(response: Response) {
 
 function getFallbackRedirect(form: HTMLFormElement) {
   const callbackURL = new FormData(form).get('callbackURL');
-  return resolveAuthRedirectTarget(callbackURL) ?? '/dashboard';
+  return (
+    resolveAuthRedirectTarget(callbackURL) ?? appConfig.defaultAuthenticatedPath
+  );
 }
 
 function getSuccessRedirect(payload: unknown, form: HTMLFormElement) {

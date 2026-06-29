@@ -5,8 +5,9 @@ boundary can host future Hyperdrive-backed PostgreSQL and MySQL adapters without
 promoting either target to production support.
 
 The proof modules under `src/db/hyperdrive` are imported by tests only. Runtime
-code should continue to create databases through the D1 path and should continue
-to reject `DATABASE_TARGET=pg` and `DATABASE_TARGET=mysql`.
+code should continue to create databases through the D1 path. PostgreSQL and
+MySQL target names remain proof-only and should stay rejected by
+`parseDatabaseTarget`.
 
 ## Schema Comparison
 
@@ -19,6 +20,13 @@ the existing SQLite contract. The PostgreSQL and MySQL proof schemas use native
 timestamp columns because those dialects have first-class timestamp support. Any
 future migration from proof to runtime support must define the serialization
 boundary for these date values before writes are enabled.
+
+`app_settings` is used here as the smallest app-owned table that exercises the
+database boundary: a keyed settings row can be read through the same logical
+helper on D1, PostgreSQL, and MySQL proof targets. Its presence in the proof does
+not make it a database management table. Runtime writes remain D1-only through
+the app settings action until Hyperdrive support is promoted beyond proof-only
+read compilation.
 
 ## Portable query patterns
 
@@ -47,7 +55,7 @@ Dialect-specific helpers are required before using:
 ## Gap list
 
 - Hyperdrive production support is still deferred.
-- `DATABASE_TARGET=pg` and `DATABASE_TARGET=mysql` still throw at runtime.
+- PostgreSQL and MySQL target names still throw when parsed as runtime targets.
 - No PostgreSQL or MySQL migrations are generated.
 - No real Hyperdrive binding is configured in `wrangler.jsonc`.
 - No PostgreSQL or MySQL driver dependency is required by this proof.

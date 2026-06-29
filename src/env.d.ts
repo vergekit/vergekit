@@ -4,8 +4,6 @@
 declare namespace Cloudflare {
   interface Env {
     DB: D1Database;
-    APP_NAME: string;
-    DATABASE_TARGET: 'd1';
     EMAIL_PROVIDER: string;
     EMAIL?: SendEmail;
     EMAIL_FROM?: string;

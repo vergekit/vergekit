@@ -2,17 +2,19 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@/components/ui/Button.astro';
 import Icon from '@/components/ui/Icon.astro';
+import { appConfig } from '@/config/app';
+import { authRouteConfig } from '@/config/auth';
 
 const isAuthenticated = Astro.locals.isAuthenticated;
 ---
 
-<BaseLayout title="VK">
+<BaseLayout title={appConfig.name}>
   <main
     class="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-16"
   >
     <div class="flex items-center gap-3 text-sm font-medium text-slate-600">
-      <img src="/favicon.svg" alt="VK" class="w-6" />
-      <span>Verge Kit</span>
+      <img src="/favicon.svg" alt={appConfig.name} class="w-6" />
+      <span>{appConfig.displayName}</span>
     </div>
 
     <h1 class="mt-5 text-4xl font-semibold tracking-normal text-slate-950">
@@ -27,14 +29,14 @@ const isAuthenticated = Astro.locals.isAuthenticated;
     {
       isAuthenticated ? (
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button href="/dashboard">
+          <Button href={appConfig.defaultAuthenticatedPath}>
             <Icon name="layout-dashboard" size={18} aria-hidden="true" />
             Dashboard
           </Button>
         </div>
       ) : (
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button href="/login">
+          <Button href={authRouteConfig.loginPath}>
             <Icon name="log-in" size={18} aria-hidden="true" />
             Sign in
           </Button>

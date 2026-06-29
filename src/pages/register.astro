@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button.astro';
 import Field from '@/components/ui/Field.astro';
 import Icon from '@/components/ui/Icon.astro';
 import Input from '@/components/ui/Input.astro';
+import { appConfig } from '@/config/app';
 ---
 
 <AuthShell
@@ -27,7 +28,11 @@ import Input from '@/components/ui/Input.astro';
     data-auth-form
     data-auth-error="register-error"
   >
-    <input type="hidden" name="callbackURL" value="/dashboard" />
+    <input
+      type="hidden"
+      name="callbackURL"
+      value={appConfig.defaultAuthenticatedPath}
+    />
 
     <p
       id="register-error"

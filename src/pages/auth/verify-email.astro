@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button.astro';
 import Field from '@/components/ui/Field.astro';
 import Icon from '@/components/ui/Icon.astro';
 import Input from '@/components/ui/Input.astro';
+import { appConfig } from '@/config/app';
 ---
 
 <AuthShell
@@ -25,7 +26,11 @@ import Input from '@/components/ui/Input.astro';
     action="/api/auth/send-verification-email"
     class="space-y-5"
   >
-    <input type="hidden" name="callbackURL" value="/dashboard" />
+    <input
+      type="hidden"
+      name="callbackURL"
+      value={appConfig.defaultAuthenticatedPath}
+    />
 
     <Field id="verify-email" label="Email" required>
       <Input

@@ -1,8 +1,9 @@
 # Copy to .dev.vars for local development.
 # Do not commit .dev.vars.
 #
-# Committed non-secret app defaults live in wrangler.jsonc vars. Add local
-# overrides here only when your machine needs to differ from wrangler.jsonc.
+# Source-level app defaults live in src/config. Committed non-secret runtime
+# vars live in wrangler.jsonc. Add local overrides here only when your machine
+# needs to differ from wrangler.jsonc.
 
 # Better Auth requires a stable local secret. Use at least 32 random characters.
 BETTER_AUTH_SECRET=replace-with-at-least-32-random-characters

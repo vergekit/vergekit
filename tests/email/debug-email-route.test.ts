@@ -5,7 +5,6 @@ const { runtimeEnv, send } = vi.hoisted(() => {
 
   return {
     runtimeEnv: {
-      APP_NAME: 'VK',
       EMAIL_PROVIDER: 'cloudflare',
       EMAIL_FROM: 'VK <noreply@example.com>',
       EMAIL: { send },

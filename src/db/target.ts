@@ -2,13 +2,14 @@ export type ImplementedDatabaseTarget = 'd1';
 export type FutureDatabaseTarget = 'pg' | 'mysql';
 export type DatabaseTarget = ImplementedDatabaseTarget | FutureDatabaseTarget;
 
+const defaultTarget: ImplementedDatabaseTarget = 'd1';
 const implementedTargets = new Set<string>(['d1']);
 const knownTargets = new Set<string>(['d1', 'pg', 'mysql']);
 
 export function parseDatabaseTarget(
   value: string | undefined,
 ): ImplementedDatabaseTarget {
-  const target = value ?? 'd1';
+  const target = value ?? defaultTarget;
 
   if (!knownTargets.has(target)) {
     throw new Error(`Unknown database target ${target}`);

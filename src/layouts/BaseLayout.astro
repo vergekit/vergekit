@@ -1,11 +1,12 @@
 ---
+import { appConfig } from '@/config/app';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
 }
 
-const { title = 'VK' } = Astro.props;
+const { title = appConfig.name } = Astro.props;
 ---
 
 <!doctype html>

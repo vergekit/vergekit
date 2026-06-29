@@ -1,0 +1,35 @@
+---
+interface Props {
+  error: unknown;
+}
+
+const { error } = Astro.props;
+---
+
+<!doctype html>
+<html style="height: 100%;">
+  <head>
+    <title>500 - SERVER ERROR</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body
+    style="height: 100%; letter-spacing: 0.015rem; font-family: -apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif;"
+  >
+    <div style="display: table; height: 100%; margin: 0 auto;">
+      <div style="display: table-cell; vertical-align: middle;">
+        <center>
+          <span
+            style="font-weight: bold; font-size: 2rem; display: inline-block; vertical-align: middle; border-right: 2px solid #000; padding-right: 0.75rem; margin-right: 0.35rem;"
+            >500</span
+          >
+          <span
+            style="font-size: 0.85rem; display: inline-block; vertical-align: middle;"
+            >{error instanceof Error ? error.message : "An error occurred on the server."}</span
+          >
+        </center>
+      </div>
+    </div>
+  </body>
+</html>

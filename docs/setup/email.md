@@ -99,7 +99,7 @@ await authEmail.sendVerificationEmail({
 
 `createAuthEmailSenderFromEnv` renders the Backstro auth templates and resolves
 the sender from `EMAIL_FROM`. With `EMAIL_PROVIDER=console`, it falls back to
-`noreply@example.test` and the configured `APP_NAME`.
+`noreply@example.test` and the app name from `src/config/app.ts`.
 
 Use this helper for Better Auth verification and reset flows. Use `sendEmail`
 directly for other transactional messages.

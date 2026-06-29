@@ -15,13 +15,11 @@ describe('init admin CLI helpers', () => {
       parseEnvFile(`
 # Comment
 BETTER_AUTH_URL=http://localhost:4321
-APP_NAME="VK Local"
 EMAIL_FROM='VK <noreply@example.test>'
 EMPTY=
 `),
     ).toEqual({
       BETTER_AUTH_URL: 'http://localhost:4321',
-      APP_NAME: 'VK Local',
       EMAIL_FROM: 'VK <noreply@example.test>',
       EMPTY: '',
     });

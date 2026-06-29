@@ -688,12 +688,15 @@ git commit -m "feat: add form and api conventions"
 - Create: `src/pages/auth/forgot-password.astro`
 - Create: `src/pages/auth/reset-password.astro`
 - Create: `src/pages/auth/verify-email.astro`
+- Create: `src/pages/404.astro`
+- Create: `src/pages/500.astro`
 - Create: `src/pages/dashboard.astro`
 - Modify: `docs/roadmap.md`
 
 Implementation notes:
 - Use Bejamas UI as copy-and-own design inspiration.
 - Use Astro-native components and `@lucide/astro` icons.
+- Keep custom error pages standalone so they can render without app shell CSS.
 - Keep all forms server-first and progressively enhance only when needed.
 - Ask the user to verify pages visually instead of using the Browser skill.
 

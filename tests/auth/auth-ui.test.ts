@@ -19,6 +19,8 @@ describe('minimal auth UI contract', () => {
     'src/pages/auth/reset-password.astro',
     'src/pages/auth/verify-email.astro',
     'src/pages/dashboard.astro',
+    'src/pages/404.astro',
+    'src/pages/500.astro',
   ];
 
   it.each(requiredFiles)('creates %s', (path) => {
@@ -69,7 +71,8 @@ describe('minimal auth UI contract', () => {
   it('links the app bootstrap page to the login and registration screens', () => {
     const source = readProjectFile('src/pages/index.astro');
 
-    expect(source).toContain('href="/login"');
+    expect(source).toContain("import { authRouteConfig } from '@/config/auth'");
+    expect(source).toContain('href={authRouteConfig.loginPath}');
     expect(source).toContain('href="/register"');
   });
 
@@ -77,7 +80,8 @@ describe('minimal auth UI contract', () => {
     const source = readProjectFile('src/pages/index.astro');
 
     expect(source).toContain('Astro.locals.isAuthenticated');
-    expect(source).toContain('href="/dashboard"');
+    expect(source).toContain("import { appConfig } from '@/config/app'");
+    expect(source).toContain('href={appConfig.defaultAuthenticatedPath}');
   });
 
   it('marks email auth forms for client-side redirect and inline errors', () => {
@@ -113,6 +117,21 @@ describe('minimal auth UI contract', () => {
     expect(source).toContain('action="/api/auth/sign-out"');
     expect(source).toContain('method="post"');
     expect(source).toContain('name="redirectTo"');
-    expect(source).toContain('value="/"');
+    expect(source).toContain('value={appConfig.homePath}');
+  });
+
+  it('provides standalone error pages for missing routes and server failures', () => {
+    const notFoundSource = readProjectFile('src/pages/404.astro');
+    const serverErrorSource = readProjectFile('src/pages/500.astro');
+
+    expect(notFoundSource).toContain('<title>404 - NOT FOUND</title>');
+    expect(notFoundSource).toContain('This page could not be found.');
+    expect(notFoundSource).toContain('font-family: -apple-system');
+
+    expect(serverErrorSource).toContain('<title>500 - SERVER ERROR</title>');
+    expect(serverErrorSource).toContain(
+      'An error occurred on the server.',
+    );
+    expect(serverErrorSource).toContain('interface Props');
   });
 });

@@ -13,9 +13,9 @@ describe('operational polish documentation contract', () => {
     const devVarsExample = await readProjectFile('.dev.vars.example');
 
     expect(wranglerConfig).toContain('"vars"');
-    expect(wranglerConfig).toContain('"APP_NAME": "VK"');
-    expect(wranglerConfig).toContain('"DATABASE_TARGET": "d1"');
     expect(wranglerConfig).toContain('"EMAIL_PROVIDER": "console"');
+    expect(wranglerConfig).not.toContain('"APP_NAME"');
+    expect(wranglerConfig).not.toContain('"DATABASE_TARGET"');
 
     expect(devVarsExample).toContain('BETTER_AUTH_SECRET=');
     expect(devVarsExample).toContain('BETTER_AUTH_URL=');
@@ -53,9 +53,11 @@ describe('operational polish documentation contract', () => {
     const readme = await readProjectFile('README.md');
     const d1Setup = await readProjectFile('docs/setup/d1.md');
     const deployment = await readProjectFile('docs/setup/deployment.md');
+    const roadmap = await readProjectFile('docs/roadmap.md');
 
     expect(readme).toContain('npm run init:admin');
     expect(readme).toContain('npm run db:studio');
+    expect(readme).toContain('Custom 404 and 500 error pages');
     expect(d1Setup).toContain('wrangler d1 create vk');
     expect(d1Setup).toContain('npm run db:generate');
     expect(d1Setup).toContain('npm run db:studio');
@@ -81,6 +83,20 @@ describe('operational polish documentation contract', () => {
     expect(deployment).toContain('wrangler secret put MAILGUN_API_KEY');
     expect(deployment).toContain('wrangler.jsonc');
     expect(deployment).toContain('npm run build');
+
+    expect(roadmap).toContain('custom 404/500 error pages');
+  });
+
+  it('documents where each kind of configuration belongs', async () => {
+    const readme = await readProjectFile('README.md');
+    const configuration = await readProjectFile('docs/setup/configuration.md');
+
+    expect(readme).toContain('docs/setup/configuration.md');
+    expect(configuration).toContain('src/config');
+    expect(configuration).toContain('wrangler.jsonc');
+    expect(configuration).toContain('.dev.vars');
+    expect(configuration).toContain('Wrangler secrets');
+    expect(configuration).toContain('separation of concerns');
   });
 
   it('keeps the verify script suitable for CI', async () => {

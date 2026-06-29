@@ -4,12 +4,14 @@ import {
   adminAc,
   defaultStatements,
 } from 'better-auth/plugins/admin/access';
+import { authRoleConfig } from '@/config/auth';
 
-export const APP_ROLES = ['admin', 'moderator', 'user', 'banned'] as const;
+export const APP_ROLES = authRoleConfig.roles;
 export type AppRole = (typeof APP_ROLES)[number];
 
-export const DEFAULT_APP_ROLE = 'user' satisfies AppRole;
-export const ADMIN_APP_ROLES = ['admin'] as const satisfies AppRole[];
+export const DEFAULT_APP_ROLE = authRoleConfig.defaultRole satisfies AppRole;
+export const ADMIN_APP_ROLES =
+  authRoleConfig.adminRoles satisfies readonly AppRole[];
 
 export interface AppUserFields {
   role?: string | null;
@@ -22,7 +24,7 @@ export type AppUser = User & AppUserFields;
 
 export const accessStatements = {
   ...defaultStatements,
-  app: ['access', 'moderate', 'administer'],
+  app: authRoleConfig.appStatements,
 } as const;
 
 export const accessControl = createAccessControl(accessStatements);
@@ -34,22 +36,22 @@ const emptyAdminPermissions = {
 
 export const adminRole = accessControl.newRole({
   ...adminAc.statements,
-  app: ['access', 'moderate', 'administer'],
+  app: authRoleConfig.roleAppPermissions.admin,
 });
 
 export const moderatorRole = accessControl.newRole({
   ...emptyAdminPermissions,
-  app: ['access', 'moderate'],
+  app: authRoleConfig.roleAppPermissions.moderator,
 });
 
 export const userRole = accessControl.newRole({
   ...emptyAdminPermissions,
-  app: ['access'],
+  app: authRoleConfig.roleAppPermissions.user,
 });
 
 export const bannedRole = accessControl.newRole({
   ...emptyAdminPermissions,
-  app: [],
+  app: authRoleConfig.roleAppPermissions.banned,
 });
 
 export const authRoles = {

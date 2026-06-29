@@ -115,7 +115,7 @@ describe('sendEmail', () => {
     const info = vi.fn();
 
     const result = await sendEmail(
-      { APP_NAME: 'VK', EMAIL_PROVIDER: undefined },
+      { EMAIL_PROVIDER: undefined },
       message,
       { console: { info } },
     );
@@ -129,7 +129,7 @@ describe('email runtime factory', () => {
   it('defaults to the console provider for local development', async () => {
     const info = vi.fn();
     const provider = createMailerFromEnv(
-      { APP_NAME: 'VK', EMAIL_PROVIDER: undefined },
+      { EMAIL_PROVIDER: undefined },
       { console: { info } },
     );
 
@@ -140,16 +140,16 @@ describe('email runtime factory', () => {
 
   it('requires explicit provider configuration for production email providers', () => {
     expect(() =>
-      createMailerFromEnv({ APP_NAME: 'VK', EMAIL_PROVIDER: 'cloudflare' }),
+      createMailerFromEnv({ EMAIL_PROVIDER: 'cloudflare' }),
     ).toThrow('EMAIL binding is required');
     expect(() =>
-      createMailerFromEnv({ APP_NAME: 'VK', EMAIL_PROVIDER: 'resend' }),
+      createMailerFromEnv({ EMAIL_PROVIDER: 'resend' }),
     ).toThrow('RESEND_API_KEY is required');
     expect(() =>
-      createMailerFromEnv({ APP_NAME: 'VK', EMAIL_PROVIDER: 'mailgun' }),
+      createMailerFromEnv({ EMAIL_PROVIDER: 'mailgun' }),
     ).toThrow('MAILGUN_API_KEY is required');
     expect(() =>
-      createMailerFromEnv({ APP_NAME: 'VK', EMAIL_PROVIDER: 'smtp-node' }),
+      createMailerFromEnv({ EMAIL_PROVIDER: 'smtp-node' }),
     ).toThrow('Import src/email/providers/smtp-node');
   });
 });

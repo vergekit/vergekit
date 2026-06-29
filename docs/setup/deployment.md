@@ -3,6 +3,8 @@
 VK deploys as an Astro server app on Cloudflare Workers. Keep committed
 runtime config in Workers bindings and `wrangler.jsonc` vars. Keep local secret
 values in `.dev.vars`, and set deployed secret values with Wrangler secrets.
+See [Configuration Guide](configuration.md) for the separation of concerns
+between `src/config`, `wrangler.jsonc`, `.dev.vars`, and Wrangler secrets.
 
 ## Preflight
 
@@ -28,8 +30,6 @@ Worker variables:
 ```jsonc
 {
   "vars": {
-    "APP_NAME": "VK",
-    "DATABASE_TARGET": "d1",
     "EMAIL_PROVIDER": "console",
     "BETTER_AUTH_URL": "https://example.com",
     "EMAIL_FROM": "VK <noreply@example.com>",
@@ -38,10 +38,11 @@ Worker variables:
 }
 ```
 
-Typical non-secret values are `APP_NAME`, `DATABASE_TARGET`, `EMAIL_PROVIDER`,
-`EMAIL_FROM`, `EMAIL_REPLY_TO`, `BETTER_AUTH_URL`, and `MAILGUN_DOMAIN`. If you
-use named Wrangler environments, define the `vars` block inside each environment
-because Wrangler does not inherit `vars` from the top level.
+Typical non-secret runtime values are `EMAIL_PROVIDER`, `EMAIL_FROM`,
+`EMAIL_REPLY_TO`, `BETTER_AUTH_URL`, and `MAILGUN_DOMAIN`. App identity and
+route policy live in `src/config`. If you use named Wrangler environments,
+define the `vars` block inside each environment because Wrangler does not
+inherit `vars` from the top level.
 
 ## Local Secrets
 

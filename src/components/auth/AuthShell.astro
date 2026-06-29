@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/ui/Icon.astro';
+import { appConfig } from '@/config/app';
 
 interface Props {
   title: string;
@@ -11,7 +12,7 @@ interface Props {
 const { title, eyebrow, description } = Astro.props;
 ---
 
-<BaseLayout title={`${title} | VK`}>
+<BaseLayout title={`${title} | ${appConfig.name}`}>
   <main
     class="min-h-screen bg-slate-50 px-4 py-8 text-slate-950 sm:px-6 lg:px-8"
   >
@@ -28,7 +29,7 @@ const { title, eyebrow, description } = Astro.props;
           >
             <Icon name="shield-check" size={20} aria-hidden="true" />
           </span>
-          VK
+          {appConfig.name}
         </a>
 
         <div class="mt-14 max-w-md">
@@ -55,7 +56,7 @@ const { title, eyebrow, description } = Astro.props;
             >
               <Icon name="shield-check" size={20} aria-hidden="true" />
             </span>
-            VK
+            {appConfig.name}
           </a>
 
           <p class="mt-8 text-sm font-medium text-emerald-700">{eyebrow}</p>

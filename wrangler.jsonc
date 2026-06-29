@@ -9,8 +9,6 @@
   // Committed app-level runtime config. Put secret values in Wrangler secrets
   // for deployed environments and in .dev.vars for local development.
   "vars": {
-    "APP_NAME": "VK",
-    "DATABASE_TARGET": "d1",
     "EMAIL_PROVIDER": "console",
     // Set these here when the deployed app needs explicit non-secret values.
     // "BETTER_AUTH_URL": "https://example.com",

@@ -1,9 +1,12 @@
-export type EmailProviderName =
-  | 'console'
-  | 'cloudflare'
-  | 'resend'
-  | 'mailgun'
-  | 'smtp-node';
+export const EMAIL_PROVIDER_NAMES = [
+  'console',
+  'cloudflare',
+  'resend',
+  'mailgun',
+  'smtp-node',
+] as const;
+
+export type EmailProviderName = (typeof EMAIL_PROVIDER_NAMES)[number];
 
 export interface EmailAddress {
   email: string;

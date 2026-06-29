@@ -4,12 +4,15 @@ import Button from '@/components/ui/Button.astro';
 import Field from '@/components/ui/Field.astro';
 import Icon from '@/components/ui/Icon.astro';
 import Input from '@/components/ui/Input.astro';
+import { appConfig } from '@/config/app';
 
-const redirectTo = Astro.url.searchParams.get('redirectTo') ?? '/dashboard';
+const redirectTo =
+  Astro.url.searchParams.get('redirectTo') ??
+  appConfig.defaultAuthenticatedPath;
 ---
 
 <AuthShell
-  title="Sign in to VK"
+  title={`Sign in to ${appConfig.name}`}
   eyebrow="Welcome back"
   description="Secure access for your workspace."
 >

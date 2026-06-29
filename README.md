@@ -18,6 +18,7 @@ plain Tailwind UI base.
   `banned`.
 - Middleware that loads auth state into typed `Astro.locals`.
 - Public-by-default route auth with opt-in protected pages and APIs.
+- Custom 404 and 500 error pages.
 - Email provider abstraction for console, Cloudflare Email, Resend, Mailgun, and
   explicit Node SMTP usage.
 - Auth email templates rendered with `@backstro/email`.
@@ -92,9 +93,15 @@ Astro Cloudflare adapter; no separate Miniflare config is required after
 and alternate local or Cloudflare-hosted dev database options.
 
 All routes are public until they opt into auth. Add protected exact paths or URL
-prefixes in `src/auth/routes.ts`, or check `Astro.locals.isAuthenticated`
+prefixes in `src/config/auth.ts`, or check `Astro.locals.isAuthenticated`
 inside a specific page or route handler. See
 [Route Authentication](docs/setup/auth-routes.md) for examples.
+
+Better Auth plugins are configured in `src/auth/server.ts` and
+`src/auth/client.ts`. The admin plugin is already installed and configured for
+the app role model. See [Route Authentication](docs/setup/auth-routes.md) for
+the plugin files that usually need to change when adding or modifying Better
+Auth plugins.
 
 Start the app:
 
@@ -144,22 +151,28 @@ testing notes, see [Email Sending](docs/setup/email.md).
 
 ## Runtime Configuration
 
+See [Configuration Guide](docs/setup/configuration.md) for the full split between
+source config, Worker runtime vars, local secrets, and deployed secrets.
+
+In short: editable app defaults used by source code live in `src/config`.
+Runtime Worker values live in `wrangler.jsonc` vars. Local secrets live in
+`.dev.vars`, and deployed secrets live in Wrangler secrets.
+
 Use `wrangler.jsonc` as the committed source of truth for non-secret Worker app
 configuration:
 
 ```jsonc
 {
   "vars": {
-    "APP_NAME": "VK",
-    "DATABASE_TARGET": "d1",
     "EMAIL_PROVIDER": "console",
   },
 }
 ```
 
-Typical non-secret values include `APP_NAME`, `DATABASE_TARGET`,
-`EMAIL_PROVIDER`, `EMAIL_FROM`, `EMAIL_REPLY_TO`, `BETTER_AUTH_URL`, and
-`MAILGUN_DOMAIN`. Do not put secret values in `wrangler.jsonc`.
+Typical non-secret runtime values include `EMAIL_PROVIDER`, `EMAIL_FROM`,
+`EMAIL_REPLY_TO`, `BETTER_AUTH_URL`, and `MAILGUN_DOMAIN`. App identity and
+route policy live in `src/config`. Do not put secret values in
+`wrangler.jsonc`.
 
 Use `.dev.vars` for local secret values:
 

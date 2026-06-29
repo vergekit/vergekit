@@ -8,6 +8,7 @@ import {
   authRoles,
   isAppBannedUser,
 } from '@/auth/permissions';
+import { authRoleConfig } from '@/config/auth';
 import { createD1Database, type AppDatabase } from '@/db/client';
 import * as schema from '@/db/schema';
 import {
@@ -46,14 +47,13 @@ export const blockAppBannedSession: BeforeSessionCreate = async (
     session.userId,
   );
 
-  if (!isAppBannedUser(user)) {
+  if (!isAppBannedUser(user as Parameters<typeof isAppBannedUser>[0])) {
     return;
   }
 
   throw APIError.from('FORBIDDEN', {
-    code: 'BANNED_USER',
-    message:
-      'You have been banned from this application. Please contact support if you believe this is an error.',
+    code: authRoleConfig.bannedSessionError.code,
+    message: authRoleConfig.bannedSessionError.message,
   });
 };
 

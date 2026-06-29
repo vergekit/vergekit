@@ -91,7 +91,7 @@ describe('Better Auth server config', () => {
               findUserById,
             },
           },
-        } as Parameters<NonNullable<typeof beforeSessionCreate>>[1],
+        } as unknown as Parameters<NonNullable<typeof beforeSessionCreate>>[1],
       ),
     ).rejects.toMatchObject({
       statusCode: 403,

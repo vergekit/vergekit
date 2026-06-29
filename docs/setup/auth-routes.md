@@ -4,9 +4,10 @@ VK loads auth state for every request, but routes are public by default. The
 middleware in `src/middleware.ts` reads the Better Auth session, writes
 `Astro.locals.user`, `Astro.locals.session`, and
 `Astro.locals.isAuthenticated`, then asks `src/auth/routes.ts` whether the
-current URL requires a login redirect.
+current URL requires a login redirect. Route policy values live in
+`src/config/auth.ts`.
 
-Use `src/auth/routes.ts` for route rules that should be enforced consistently by
+Use `src/config/auth.ts` for route rules that should be enforced consistently by
 middleware. Use a route-local check when the rule is specific to one page or API
 handler.
 
@@ -14,12 +15,39 @@ The boilerplate also ships with app roles powered by the Better Auth admin
 plugin: `admin`, `moderator`, `user`, and `banned`. Admin URL routes are
 reserved for users with the `app:administer` permission.
 
+## Better Auth Plugins
+
+The Better Auth admin plugin is installed and configured. Server-side Better
+Auth plugins live in the `plugins` array in `src/auth/server.ts`; the matching
+browser client plugins live in the `plugins` array in `src/auth/client.ts`.
+
+When adding or modifying a Better Auth plugin, check the full plugin surface:
+
+- `src/auth/server.ts` for server plugin imports, plugin options, database
+  hooks, and runtime config used by Better Auth.
+- `src/auth/client.ts` for matching client plugin imports and client-side
+  options.
+- `src/config/auth.ts` for app roles and app permission values.
+- `src/auth/permissions.ts` for Better Auth access-control construction and
+  role normalization.
+- `src/db/schema/auth.ts` and `drizzle/d1/*` migrations for plugin-required
+  tables or columns.
+- `src/env.d.ts` when the plugin changes the session or user fields exposed on
+  `Astro.locals`.
+- `tests/auth/server-config.test.ts`, `tests/auth/auth-schema.test.ts`, and
+  `tests/auth/permissions.test.ts` for plugin config, schema, and permission
+  coverage.
+
 ## Middleware-Protected Routes
 
 Add exact URLs to `protectedExactPaths` when one route needs authentication:
 
 ```ts
-const protectedExactPaths = new Set(['/dashboard', '/account']);
+export const authRouteConfig = {
+  protectedExactPaths: ['/dashboard', '/account'],
+  protectedPrefixes: [],
+  // ...
+} as const;
 ```
 
 Unauthenticated requests to those paths redirect to `/login` with the original
@@ -33,10 +61,11 @@ Add URL prefixes to `protectedPrefixes` when a group of routes shares the same
 auth requirement:
 
 ```ts
-const protectedPrefixes: string[] = [
-  '/settings/',
-  '/api/account/',
-];
+export const authRouteConfig = {
+  protectedExactPaths: ['/dashboard'],
+  protectedPrefixes: ['/settings/', '/api/account/'],
+  // ...
+} as const;
 ```
 
 Use slash-terminated prefixes when matching a route group. A prefix such as
@@ -45,9 +74,11 @@ like `/settings-public`. If the group index route should also be protected, add
 it as an exact path:
 
 ```ts
-const protectedExactPaths = new Set(['/dashboard', '/settings']);
-
-const protectedPrefixes: string[] = ['/settings/'];
+export const authRouteConfig = {
+  protectedExactPaths: ['/dashboard', '/settings'],
+  protectedPrefixes: ['/settings/'],
+  // ...
+} as const;
 ```
 
 Astro filesystem route groups, such as `src/pages/(app)/dashboard.astro`, do not
@@ -60,20 +91,29 @@ appear in request URLs. Add the URL path that the group produces, such as
 routes. Anonymous users are redirected to `/login`; authenticated users without
 the `app:administer` permission receive a `403` response.
 
-Change admin route policy in `src/auth/routes.ts`:
+Change admin route policy in `src/config/auth.ts`:
 
 ```ts
-const adminExactPaths = new Set(['/admin']);
-const adminPrefixes = ['/admin/'];
+export const authRouteConfig = {
+  adminExactPaths: ['/admin'],
+  adminPrefixes: ['/admin/'],
+  adminPermission: { app: ['administer'] },
+  // ...
+} as const;
 ```
 
-Change role permissions in `src/auth/permissions.ts`:
+Change role permissions in `src/config/auth.ts`:
 
 ```ts
-export const adminRole = accessControl.newRole({
-  ...adminAc.statements,
-  app: ['access', 'moderate', 'administer'],
-});
+export const authRoleConfig = {
+  roleAppPermissions: {
+    admin: ['access', 'moderate', 'administer'],
+    moderator: ['access', 'moderate'],
+    user: ['access'],
+    banned: [],
+  },
+  // ...
+} as const;
 ```
 
 ## Route-Local Checks

@@ -1,10 +1,12 @@
 import { render, renderText } from '@backstro/email/render';
+import { appConfig } from '@/config/app';
 import { createCloudflareEmailProvider } from './providers/cloudflare';
 import { createConsoleEmailProvider } from './providers/console';
 import { createMailgunEmailProvider } from './providers/mailgun';
 import { createResendEmailProvider } from './providers/resend';
 import ResetPasswordEmail from './templates/auth/ResetPassword.astro';
 import VerifyEmail from './templates/auth/VerifyEmail.astro';
+import { EMAIL_PROVIDER_NAMES } from './types';
 import type {
   EmailProvider,
   EmailProviderName,
@@ -14,7 +16,6 @@ import type {
 } from './types';
 
 export interface EmailRuntimeEnv {
-  APP_NAME?: string;
   EMAIL_PROVIDER?: string;
   EMAIL?: SendEmail;
   EMAIL_FROM?: string;
@@ -23,6 +24,9 @@ export interface EmailRuntimeEnv {
   MAILGUN_API_KEY?: string;
   MAILGUN_DOMAIN?: string;
 }
+
+const DEFAULT_EMAIL_PROVIDER: EmailProviderName = 'console';
+const CONSOLE_FALLBACK_FROM_EMAIL = 'noreply@example.test';
 
 export interface CreateMailerFromEnvOptions {
   console?: Parameters<typeof createConsoleEmailProvider>[0];
@@ -159,11 +163,10 @@ export function createAuthEmailSenderFromEnv(
   runtimeEnv: EmailRuntimeEnv,
   options?: CreateMailerFromEnvOptions,
 ) {
-  const appName = runtimeEnv.APP_NAME?.trim() || 'VK';
   const providerName = resolveEmailProviderName(runtimeEnv.EMAIL_PROVIDER);
 
   return createAuthEmailSender({
-    appName,
+    appName: appConfig.name,
     from: resolveEmailFromAddress(runtimeEnv, providerName),
     replyTo: runtimeEnv.EMAIL_REPLY_TO,
     mailer: createMailerFromEnv(runtimeEnv, options),
@@ -199,16 +202,10 @@ export async function renderResetPasswordEmail({
 }
 
 function resolveEmailProviderName(providerName?: string): EmailProviderName {
-  const normalized = providerName?.trim() || 'console';
+  const normalized = providerName?.trim() || DEFAULT_EMAIL_PROVIDER;
 
-  if (
-    normalized === 'console' ||
-    normalized === 'cloudflare' ||
-    normalized === 'resend' ||
-    normalized === 'mailgun' ||
-    normalized === 'smtp-node'
-  ) {
-    return normalized;
+  if (EMAIL_PROVIDER_NAMES.includes(normalized as EmailProviderName)) {
+    return normalized as EmailProviderName;
   }
 
   throw new Error(`Unsupported EMAIL_PROVIDER "${normalized}"`);
@@ -226,8 +223,8 @@ function resolveEmailFromAddress(
 
   if (providerName === 'console') {
     return {
-      email: 'noreply@example.test',
-      name: runtimeEnv.APP_NAME?.trim() || 'VK',
+      email: CONSOLE_FALLBACK_FROM_EMAIL,
+      name: appConfig.name,
     };
   }
 

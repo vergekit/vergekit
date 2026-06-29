@@ -54,7 +54,7 @@ describe('auth protected route policy', () => {
     expect(SIGN_OUT_PATH).toBe('/api/auth/sign-out');
     expect(
       shouldRedirectSignOutRequest(
-        new Request('https://vk.local/api/auth/sign-out', {
+        new Request('http://localhost:4321/api/auth/sign-out', {
           method: 'POST',
           headers: { accept: 'text/html' },
         }),
@@ -62,7 +62,7 @@ describe('auth protected route policy', () => {
     ).toBe(true);
     expect(
       shouldRedirectSignOutRequest(
-        new Request('https://vk.local/api/auth/sign-out', {
+        new Request('http://127.0.0.1:4321/api/auth/sign-out', {
           method: 'POST',
           headers: { accept: 'application/json' },
         }),
@@ -71,12 +71,12 @@ describe('auth protected route policy', () => {
   });
 
   it('strips form content before forwarding native sign-out posts to Better Auth', () => {
-    const request = new Request('https://vk.local/api/auth/sign-out', {
+    const request = new Request('http://localhost:4321/api/auth/sign-out', {
       method: 'POST',
       headers: {
         accept: 'text/html',
         'content-type': 'application/x-www-form-urlencoded',
-        origin: 'https://vk.local',
+        origin: 'http://localhost:4321',
       },
       body: new URLSearchParams({ redirectTo: '/' }),
     });
@@ -84,15 +84,15 @@ describe('auth protected route policy', () => {
     const authRequest = createSignOutAuthRequest(request);
 
     expect(authRequest.method).toBe('POST');
-    expect(authRequest.url).toBe('https://vk.local/api/auth/sign-out');
-    expect(authRequest.headers.get('origin')).toBe('https://vk.local');
+    expect(authRequest.url).toBe('http://localhost:4321/api/auth/sign-out');
+    expect(authRequest.headers.get('origin')).toBe('http://localhost:4321');
     expect(authRequest.headers.get('content-type')).toBeNull();
   });
 
   it('resolves safe sign-out redirects with / as the default', async () => {
     await expect(
       resolveSignOutRedirectPath(
-        new Request('https://vk.local/api/auth/sign-out', {
+        new Request('http://localhost:4321/api/auth/sign-out', {
           method: 'POST',
           headers: {
             accept: 'text/html',
@@ -105,7 +105,7 @@ describe('auth protected route policy', () => {
 
     await expect(
       resolveSignOutRedirectPath(
-        new Request('https://vk.local/api/auth/sign-out', {
+        new Request('http://localhost:4321/api/auth/sign-out', {
           method: 'POST',
           headers: {
             accept: 'text/html',
@@ -118,9 +118,26 @@ describe('auth protected route policy', () => {
 
     await expect(
       resolveSignOutRedirectPath(
-        new Request('https://vk.local/api/auth/sign-out', {
+        new Request('http://localhost:4321/api/auth/sign-out', {
           method: 'POST',
           headers: { accept: 'text/html' },
+        }),
+      ),
+    ).resolves.toBe('/');
+  });
+
+  it('rejects absolute sign-out redirects', async () => {
+    await expect(
+      resolveSignOutRedirectPath(
+        new Request('http://localhost:4321/api/auth/sign-out', {
+          method: 'POST',
+          headers: {
+            accept: 'text/html',
+            'content-type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            redirectTo: 'http://localhost:4321/dashboard',
+          }),
         }),
       ),
     ).resolves.toBe('/');
