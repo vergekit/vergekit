@@ -9,18 +9,6 @@ Start new apps with low effort and high confidence.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 ## The Stack
 
 - [Astro](https://astro.build) - SSR with strict
@@ -44,21 +32,18 @@ We've also configured middleware, basic auth flows, route protection, user roles
 
 - Email providers for console,
   [Cloudflare Email](https://developers.cloudflare.com/email-service/),
-  [Resend](https://resend.com), [Mailgun](https://www.mailgun.com), and explicit
-  [Node](https://nodejs.org) SMTP usage
+  [Resend](https://resend.com), [Mailgun](https://www.mailgun.com)
 
 - CSRF origin checks through [Astro config](https://docs.astro.build/en/guides/security/)
 
-and local Astro UI components
+- and local Astro UI components
 
-and verification scripts
-  helper scripts
+- and verification scripts
+  - helper scripts (all the npm run stuff)
 
-with email/password, email
-  verification, reset password, and D1 storage
-  roles for `admin`, `moderator`, `user`, and `banned`
-- Register, login, logout, email verification, forgot password, and reset
-  password flows
+- with email/password, email verification, reset password, and D1 storage
+  - roles for `admin`, `moderator`, `user`, and `banned`
+- Register, login, logout, email verification, forgot password, and reset password flows
 - Middleware that loads auth state into typed `Astro.locals`
 - Public-by-default route auth with opt-in protected pages and APIs
 - Custom 404 and 500 error pages
@@ -120,7 +105,6 @@ RESEND_API_KEY=your-api-key
 
 
 Start the app:
-
 ```bash
 npm run dev
 ```
@@ -131,8 +115,9 @@ npm run dev
 
 ## Documentation
 
-?? support
+?? support (i don't want to hear about your problems, but let me know if you find an actual bug)
 ?? license
+?? contributing? (please don't)
 
 
 See the [configuration guide](https://vergekit.com/docs/setup/runtime-configuration/)
