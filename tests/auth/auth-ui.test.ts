@@ -9,9 +9,9 @@ function readProjectFile(path: string) {
 
 describe('minimal auth UI contract', () => {
   const requiredFiles = [
-    'src/ui/button/Button.astro',
-    'src/ui/input/Input.astro',
-    'src/components/ui/Field.astro',
+    'src/components/ui/form/Button.astro',
+    'src/components/ui/form/Input.astro',
+    'src/components/ui/form/Field.astro',
     'src/components/auth/AuthShell.astro',
     'src/pages/login.astro',
     'src/pages/register.astro',
@@ -28,8 +28,8 @@ describe('minimal auth UI contract', () => {
   });
 
   it('uses Bejamas-generated button and input components in auth UI', () => {
-    const buttonSource = readProjectFile('src/ui/button/Button.astro');
-    const inputSource = readProjectFile('src/ui/input/Input.astro');
+    const buttonSource = readProjectFile('src/components/ui/form/Button.astro');
+    const inputSource = readProjectFile('src/components/ui/form/Input.astro');
 
     expect(buttonSource).toContain('buttonVariants');
     expect(buttonSource).toContain('data-slot="button"');
@@ -56,15 +56,15 @@ describe('minimal auth UI contract', () => {
     for (const page of buttonPages) {
       const source = readProjectFile(page);
 
-      expect(source).toContain("from '@/ui/button'");
-      expect(source).not.toContain("@/components/ui/Button.astro");
-      expect(source).not.toContain("@/components/ui/Input.astro");
+      expect(source).toContain("from '@/components/ui/form/Button.astro'");
+      expect(source).not.toContain("from '@/ui/button'");
     }
 
     for (const page of inputPages) {
       const source = readProjectFile(page);
 
-      expect(source).toContain("from '@/ui/input'");
+      expect(source).toContain("from '@/components/ui/form/Input.astro'");
+      expect(source).not.toContain("from '@/ui/input'");
     }
   });
 

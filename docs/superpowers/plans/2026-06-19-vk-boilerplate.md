@@ -679,9 +679,9 @@ git commit -m "feat: add form and api conventions"
 ## Slice 6: Minimal Auth UI
 
 **Files:**
-- Create: `src/components/ui/Button.astro`
-- Create: `src/components/ui/Input.astro`
-- Create: `src/components/ui/Field.astro`
+- Create: `src/components/ui/form/Button.astro`
+- Create: `src/components/ui/form/Input.astro`
+- Create: `src/components/ui/form/Field.astro`
 - Create: `src/components/auth/AuthShell.astro`
 - Create: `src/pages/login.astro`
 - Create: `src/pages/register.astro`
