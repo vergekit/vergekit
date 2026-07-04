@@ -1,10 +1,9 @@
 import { env } from 'cloudflare:workers';
 import type { APIRoute } from 'astro';
+import { sendEmail } from '@vergekit/core/email';
+import { jsonFailure, jsonSuccess, parseJsonRequest } from '@vergekit/core/http';
 import { z } from 'zod';
 import { appConfig } from '@/config/app';
-import { sendEmail } from '@/email/send';
-import { jsonFailure, jsonSuccess } from '@/lib/http/json';
-import { parseJsonRequest } from '@/lib/http/parse';
 
 const debugEmailSchema = z.object({
   to: z.email(),

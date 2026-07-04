@@ -80,6 +80,12 @@ Apply local D1 migrations:
 npm run db:migrate:local
 ```
 
+Inspect the local schema and data with Drizzle Studio:
+
+```bash
+npm run db:studio
+```
+
 Optionally create a verified local user with the `admin` role after migrations:
 
 ```bash
@@ -120,7 +126,6 @@ npm run dev
 ?? contributing? (please don't)
 
 
-See the [configuration guide](https://vergekit.com/docs/setup/runtime-configuration/)
-
+See `docs/setup/configuration.md` and the [configuration guide](https://vergekit.com/docs/setup/runtime-configuration/).
 
 

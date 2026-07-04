@@ -11,11 +11,12 @@ import {
 import { authRoleConfig } from '@/config/auth';
 import * as schema from '@/config/schema';
 import { createD1Database, type AppDatabase } from '@/db/client';
+import { createAuthEmailSenderOptions } from '@/email';
 import {
   createAuthEmailSenderFromEnv,
   type AuthEmailSender,
   type EmailRuntimeEnv,
-} from '@/email/send';
+} from '@vergekit/core/email';
 
 export interface CreateAuthOptions {
   database: AppDatabase;
@@ -152,6 +153,9 @@ export function createAuthFromEnv(
     database: createD1Database(runtimeEnv.DB),
     baseURL: resolveAuthBaseURL(runtimeEnv, request),
     secret: resolveAuthSecret(runtimeEnv),
-    authEmail: createAuthEmailSenderFromEnv(runtimeEnv),
+    authEmail: createAuthEmailSenderFromEnv(
+      runtimeEnv,
+      createAuthEmailSenderOptions(),
+    ),
   });
 }

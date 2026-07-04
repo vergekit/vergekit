@@ -600,15 +600,10 @@ git commit -m "feat: add better auth middleware spine"
 ## Slice 4: Email Layer
 
 **Files:**
-- Create: `src/email/types.ts`
-- Create: `src/email/providers/console.ts`
-- Create: `src/email/providers/cloudflare.ts`
-- Create: `src/email/providers/resend.ts`
-- Create: `src/email/providers/mailgun.ts`
-- Create: `src/email/providers/smtp-node.ts`
-- Create: `src/email/send.ts`
-- Create: `src/email/templates/auth/VerifyEmail.astro`
-- Create: `src/email/templates/auth/ResetPassword.astro`
+- Use: `@vergekit/core/email`
+- Create: `src/email/VerifyEmail.astro`
+- Create: `src/email/ResetPassword.astro`
+- Create: `src/email/index.ts`
 - Create: `tests/email/send-email.test.ts`
 - Modify: `src/auth/server.ts`
 - Modify: `docs/roadmap.md`
@@ -637,8 +632,7 @@ git commit -m "feat: add provider-based email layer"
 ## Slice 5: Form And API Conventions
 
 **Files:**
-- Create: `src/lib/http/json.ts`
-- Create: `src/lib/http/parse.ts`
+- Use: `@vergekit/core/http`
 - Create: `src/actions/index.ts`
 - Create: `src/actions/app-settings.ts`
 - Create: `src/pages/api/health.ts`

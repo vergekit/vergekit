@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { jsonFailure, jsonSuccess } from '@/lib/http/json';
+import { jsonFailure, jsonSuccess } from '@vergekit/core/http';
 
 describe('standard JSON responses', () => {
   it('wraps successful payloads in a data object', async () => {

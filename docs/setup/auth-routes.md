@@ -140,7 +140,7 @@ For an API route, return an API-shaped response:
 
 ```ts
 import type { APIRoute } from 'astro';
-import { jsonFailure, jsonSuccess } from '@/lib/http/json';
+import { jsonFailure, jsonSuccess } from '@vergekit/core/http';
 
 export const POST: APIRoute = async ({ locals }) => {
   if (!locals.isAuthenticated) {

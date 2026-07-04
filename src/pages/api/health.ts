@@ -1,4 +1,4 @@
-import { jsonSuccess } from '@/lib/http/json';
+import { jsonSuccess } from '@vergekit/core/http';
 
 export function GET() {
   return jsonSuccess({

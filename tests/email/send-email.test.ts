@@ -1,17 +1,20 @@
 import { describe, expect, it, vi } from 'vitest';
 import { buildAuthOptions } from '@/auth/server';
-import { createCloudflareEmailProvider } from '@/email/providers/cloudflare';
-import { createConsoleEmailProvider } from '@/email/providers/console';
-import { createMailgunEmailProvider } from '@/email/providers/mailgun';
-import { createResendEmailProvider } from '@/email/providers/resend';
 import {
-  createAuthEmailSender,
-  createMailerFromEnv,
+  createAuthEmailSenderOptions,
   renderResetPasswordEmail,
   renderVerifyEmail,
+} from '@/email';
+import {
+  createAuthEmailSender,
+  createCloudflareEmailProvider,
+  createConsoleEmailProvider,
+  createMailerFromEnv,
+  createMailgunEmailProvider,
+  createResendEmailProvider,
   sendEmail,
-} from '@/email/send';
-import type { Fetcher, SendEmailInput } from '@/email/types';
+} from '@vergekit/core/email';
+import type { Fetcher, SendEmailInput } from '@vergekit/core/email';
 import type { AppDatabase } from '@/db/client';
 
 const message = {
@@ -191,8 +194,9 @@ describe('auth email rendering', () => {
 describe('Better Auth email hooks', () => {
   it('wires verification and reset hooks through the auth email sender', async () => {
     const sent: SendEmailInput[] = [];
+    const { renderVerificationEmail, renderResetPasswordEmail } =
+      createAuthEmailSenderOptions();
     const authEmail = createAuthEmailSender({
-      appName: 'VK',
       from: 'accounts@example.com',
       mailer: {
         send: async (input) => {
@@ -200,6 +204,8 @@ describe('Better Auth email hooks', () => {
           return { provider: 'console', id: 'test' };
         },
       },
+      renderVerificationEmail,
+      renderResetPasswordEmail,
     });
     const options = buildAuthOptions({
       database: {} as AppDatabase,

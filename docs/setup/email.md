@@ -1,9 +1,9 @@
 # Email Sending
 
-VK sends mail through the provider abstraction in `src/email/send.ts`. The main
-entry point is `sendEmail(runtimeEnv, input)`, which resolves the configured
+VK sends mail through the provider abstraction in `@vergekit/core/email`. The
+main entry point is `sendEmail(runtimeEnv, input)`, which resolves the configured
 provider from `runtimeEnv.EMAIL_PROVIDER` and sends one message with the common
-`SendEmailInput` shape.
+`SendEmailInput` shape. App-specific auth templates live in `src/email`.
 
 ## Direct Sends
 
@@ -12,7 +12,7 @@ custom transactional email.
 
 ```ts
 import { env } from 'cloudflare:workers';
-import { sendEmail } from '@/email/send';
+import { sendEmail } from '@vergekit/core/email';
 
 const result = await sendEmail(env, {
   to: { email: 'customer@example.com', name: 'Customer Name' },
@@ -88,9 +88,13 @@ Verification and password-reset emails use the higher-level auth helper:
 
 ```ts
 import { env } from 'cloudflare:workers';
-import { createAuthEmailSenderFromEnv } from '@/email/send';
+import { createAuthEmailSenderFromEnv } from '@vergekit/core/email';
+import { createAuthEmailSenderOptions } from '@/email';
 
-const authEmail = createAuthEmailSenderFromEnv(env);
+const authEmail = createAuthEmailSenderFromEnv(
+  env,
+  createAuthEmailSenderOptions(),
+);
 
 await authEmail.sendVerificationEmail({
   to: 'customer@example.com',
@@ -99,8 +103,9 @@ await authEmail.sendVerificationEmail({
 });
 ```
 
-`createAuthEmailSenderFromEnv` renders the Backstro auth templates and resolves
-the sender from `EMAIL_FROM`. With `EMAIL_PROVIDER=console`, it falls back to
+`createAuthEmailSenderFromEnv` resolves the mailer and sender from runtime env.
+`createAuthEmailSenderOptions` supplies the app's Backstro auth template
+renderers from `src/email`. With `EMAIL_PROVIDER=console`, it falls back to
 `noreply@example.test` and the app name from `src/config/app.ts`.
 
 Use this helper for Better Auth verification and reset flows. Use `sendEmail`

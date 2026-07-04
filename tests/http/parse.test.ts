@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { parseJsonRequest, parseWithSchema } from '@vergekit/core/http';
 import { z } from 'zod';
-import { parseJsonRequest, parseWithSchema } from '@/lib/http/parse';
 
 const profileSchema = z.object({
   email: z.email(),
