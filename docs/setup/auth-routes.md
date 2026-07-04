@@ -30,7 +30,7 @@ When adding or modifying a Better Auth plugin, check the full plugin surface:
 - `src/config/auth.ts` for app roles and app permission values.
 - `src/auth/permissions.ts` for Better Auth access-control construction and
   role normalization.
-- `src/db/schema/auth.ts` and `drizzle/d1/*` migrations for plugin-required
+- `src/config/schema.ts` and `drizzle/d1/*` migrations for plugin-required
   tables or columns.
 - `src/env.d.ts` when the plugin changes the session or user fields exposed on
   `Astro.locals`.

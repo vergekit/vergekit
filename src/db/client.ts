@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
+import { appSettings } from '@/config/schema';
+import * as schema from '@/config/schema';
 import type { AppSettingsQueryTarget } from './queries/app-settings';
-import { appSettings } from './schema';
-import * as schema from './schema';
 
 export type { AppSettingsQueryTarget } from './queries/app-settings';
 

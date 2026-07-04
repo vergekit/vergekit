@@ -1,19 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   appSettingInputSchema,
   setAppSetting,
-  updateAppSettingAction,
-} from '@/actions/app-settings';
-import { appSettings } from '@/db/schema';
+} from '@/db/mutations/app-settings';
+import { appSettings } from '@/config/schema';
 import type { AppDatabase } from '@/db/client';
 
-vi.mock('cloudflare:workers', () => ({
-  env: {
-    DB: {},
-  },
-}));
-
-describe('app settings action convention', () => {
+describe('app settings mutation', () => {
   it('defines a form input schema for the sample mutation', () => {
     const parsed = appSettingInputSchema.safeParse({
       key: 'site.title',
@@ -31,11 +24,6 @@ describe('app settings action convention', () => {
       appSettingInputSchema.safeParse({ key: '../secret', value: 'VK' })
         .success,
     ).toBe(false);
-  });
-
-  it('registers the sample mutation as an Astro form action', () => {
-    expect(updateAppSettingAction).toBeTypeOf('function');
-    expect(updateAppSettingAction).toHaveProperty('orThrow');
   });
 
   it('upserts app settings through the D1 drizzle query surface', async () => {

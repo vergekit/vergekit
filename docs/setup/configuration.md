@@ -7,7 +7,7 @@ and secrets stay out of the repo.
 
 | Location | Use for | Examples |
 | --- | --- | --- |
-| `src/config/*.ts` | Source-level defaults and policies that app code imports. These are committed and typed. | App name, default authenticated path, protected routes, app roles, permission values. |
+| `src/config/*.ts` | Source-level defaults, policies, and schema that app code imports. These are committed and typed. | App name, default authenticated path, protected routes, app roles, permission values, D1 table definitions. |
 | `wrangler.jsonc` `vars` | Committed, non-secret Worker runtime values that can differ by deployed environment. | `EMAIL_PROVIDER`, `EMAIL_FROM`, `EMAIL_REPLY_TO`, `BETTER_AUTH_URL`, `MAILGUN_DOMAIN`. |
 | `.dev.vars` | Local-only secrets and local-only overrides. Never commit this file. | `BETTER_AUTH_SECRET`, local `BETTER_AUTH_URL`, `RESEND_API_KEY`, `MAILGUN_API_KEY`, local email overrides. |
 | Wrangler secrets | Deployed secret values managed by Cloudflare, not committed to git. | `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, `MAILGUN_API_KEY`. |
@@ -23,10 +23,12 @@ Use `src/config` when changing values that the app code should import directly:
 - `src/config/app.ts`: app identity and default navigation paths.
 - `src/config/auth.ts`: middleware route policy, admin route policy, app roles,
   app permission values, and banned-session copy.
+- `src/config/schema.ts`: Drizzle D1 table definitions shared by app code,
+  Better Auth, and Drizzle Kit.
 
 Database target constants stay with `src/db/target.ts`. Email provider names and
 fallback behavior stay with `src/email`. Do not put environment secrets here. Do
-not move database schema here; schema belongs in `src/db/schema`.
+not put runtime database target selection here.
 
 ## Worker Runtime Config
 

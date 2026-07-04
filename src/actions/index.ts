@@ -1,5 +1,9 @@
-import { appSettingsActions } from './app-settings';
+// Register Astro Actions here. Example:
+//
+// import { sampleActions } from './sample';
+//
+// export const server = {
+//   sample: sampleActions,
+// };
 
-export const server = {
-  appSettings: appSettingsActions,
-};
+export const server = {};

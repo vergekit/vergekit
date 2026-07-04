@@ -1,8 +1,6 @@
-import { env } from 'cloudflare:workers';
-import { defineAction } from 'astro:actions';
-import { z } from 'astro/zod';
-import { createD1Database, type AppDatabase } from '@/db/client';
-import { appSettings } from '@/db/schema';
+import { z } from 'zod';
+import { appSettings } from '@/config/schema';
+import type { AppDatabase } from '@/db/client';
 
 export const appSettingInputSchema = z.object({
   key: z
@@ -51,13 +49,3 @@ export async function setAppSetting(
     updatedAt: timestamp.toISOString(),
   };
 }
-
-export const updateAppSettingAction = defineAction({
-  accept: 'form',
-  input: appSettingInputSchema,
-  handler: async (input) => setAppSetting(createD1Database(env.DB), input),
-});
-
-export const appSettingsActions = {
-  update: updateAppSettingAction,
-};

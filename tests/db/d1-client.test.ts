@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { describe, expect, it } from 'vitest';
+import { appSettings } from '@/config/schema';
 import { createD1Database } from '@/db/client';
-import { appSettings } from '@/db/schema';
 
 describe('createD1Database', () => {
   it('creates a D1 drizzle client with the app schema query surface', () => {

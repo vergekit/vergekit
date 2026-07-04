@@ -367,8 +367,7 @@ Expected: commit succeeds.
 **Files:**
 - Create: `drizzle.config.ts`
 - Create: `drizzle/d1/.gitkeep`
-- Create: `src/db/schema/app.ts`
-- Create: `src/db/schema/index.ts`
+- Create: `src/config/schema.ts`
 - Create: `src/db/target.ts`
 - Create: `src/db/client.ts`
 - Create: `tests/db/db-target.test.ts`
@@ -473,7 +472,7 @@ Expected: pass.
 
 - [ ] **Step 7: Add app schema**
 
-Create `src/db/schema/app.ts`:
+Create `src/config/schema.ts`:
 
 ```ts
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
@@ -486,12 +485,6 @@ export const appSettings = sqliteTable('app_settings', {
 });
 ```
 
-Create `src/db/schema/index.ts`:
-
-```ts
-export * from './app';
-```
-
 - [ ] **Step 8: Add Drizzle config**
 
 Create `drizzle.config.ts`:
@@ -502,7 +495,7 @@ import { defineConfig } from 'drizzle-kit';
 export default defineConfig({
   dialect: 'sqlite',
   driver: 'd1-http',
-  schema: './src/db/schema/index.ts',
+  schema: './src/config/schema.ts',
   out: './drizzle/d1',
   dbCredentials: {
     accountId: process.env.CLOUDFLARE_ACCOUNT_ID ?? 'local',
@@ -518,7 +511,7 @@ Create `src/db/client.ts`:
 
 ```ts
 import { drizzle } from 'drizzle-orm/d1';
-import * as schema from './schema';
+import * as schema from '@/config/schema';
 
 export type AppDatabase = ReturnType<typeof createD1Database>;
 
@@ -534,7 +527,7 @@ Create `tests/db/portable-query-shape.test.ts`:
 ```ts
 import { eq } from 'drizzle-orm';
 import { describe, expect, it } from 'vitest';
-import { appSettings } from '@/db/schema';
+import { appSettings } from '@/config/schema';
 
 describe('portable app query shapes', () => {
   it('keeps app settings queries in the drizzle query builder subset', () => {
@@ -576,7 +569,7 @@ Expected: commit succeeds.
 - Create: `src/pages/api/auth/[...all].ts`
 - Create: `src/middleware.ts`
 - Modify: `src/env.d.ts`
-- Extend: `src/db/schema/auth.ts`
+- Extend: `src/config/schema.ts`
 - Create: `tests/auth/public-paths.test.ts`
 - Create: `tests/middleware/route-access.test.ts`
 - Modify: `docs/roadmap.md`

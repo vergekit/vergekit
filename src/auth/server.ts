@@ -9,8 +9,8 @@ import {
   isAppBannedUser,
 } from '@/auth/permissions';
 import { authRoleConfig } from '@/config/auth';
+import * as schema from '@/config/schema';
 import { createD1Database, type AppDatabase } from '@/db/client';
-import * as schema from '@/db/schema';
 import {
   createAuthEmailSenderFromEnv,
   type AuthEmailSender,

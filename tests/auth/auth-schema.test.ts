@@ -1,7 +1,7 @@
 import { eq, getTableName } from 'drizzle-orm';
 import { describe, expect, it } from 'vitest';
+import { account, session, user, verification } from '@/config/schema';
 import { createD1Database } from '@/db/client';
-import { account, session, user, verification } from '@/db/schema';
 
 describe('Better Auth D1 schema', () => {
   it('exposes the core Better Auth table names expected by the Drizzle adapter', () => {
