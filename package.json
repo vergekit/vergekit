@@ -1,7 +1,6 @@
 {
-  "name": "vk",
-  "version": "0.0.1",
-  "private": true,
+  "name": "Verge Kit",
+  "version": "0.1.2",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
