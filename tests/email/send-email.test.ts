@@ -166,10 +166,14 @@ describe('auth email rendering', () => {
     });
 
     expect(email.subject).toBe('Verify your VK email');
+    expect(email.html).toContain('x-apple-disable-message-reformatting');
+    expect(email.html).toContain('data-skip-in-text="true"');
+    expect(email.html).toContain('mso-padding-alt');
     expect(email.html).toContain('Confirm email address');
     expect(email.html).toContain(
       'https://vk.example.com/verify-email?token=abc',
     );
+    expect(email.text).toContain('verify your email address for VK');
     expect(email.text).toContain('Confirm email address');
     expect(email.text).toContain(
       'https://vk.example.com/verify-email?token=abc',
@@ -184,8 +188,13 @@ describe('auth email rendering', () => {
     });
 
     expect(email.subject).toBe('Reset your VK password');
+    expect(email.html).toContain('x-apple-disable-message-reformatting');
+    expect(email.html).toContain('data-skip-in-text="true"');
+    expect(email.html).toContain('mso-padding-alt');
     expect(email.html).toContain('Reset password');
+    expect(email.html).toContain('new password for VK');
     expect(email.html).toContain('https://vk.example.com/reset-password/token');
+    expect(email.text).toContain('new password for VK');
     expect(email.text).toContain('Reset password');
     expect(email.text).toContain('https://vk.example.com/reset-password/token');
   });
