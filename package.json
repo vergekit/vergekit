@@ -2,6 +2,8 @@
   "name": "Verge Kit",
   "version": "0.1.2",
   "type": "module",
+  "author": "Jonathan Youngblood",
+  "license": "MIT",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
