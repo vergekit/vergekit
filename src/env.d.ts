@@ -8,7 +8,6 @@ declare namespace Cloudflare {
     EMAIL?: SendEmail;
     EMAIL_FROM?: string;
     EMAIL_REPLY_TO?: string;
-    EMAIL_DEBUG_SECRET?: string;
     RESEND_API_KEY?: string;
     MAILGUN_API_KEY?: string;
     MAILGUN_DOMAIN?: string;

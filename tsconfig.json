@@ -4,6 +4,8 @@
   "exclude": ["dist", ".wrangler"],
   "compilerOptions": {
     "baseUrl": ".",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "paths": {
       "@/*": ["src/*"]
     },

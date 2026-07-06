@@ -4,7 +4,7 @@ import {
   createAuthEmailSenderOptions,
   renderResetPasswordEmail,
   renderVerifyEmail,
-} from '@/email';
+} from '@/auth/email';
 import {
   createAuthEmailSender,
   createCloudflareEmailProvider,
@@ -158,7 +158,7 @@ describe('email runtime factory', () => {
 });
 
 describe('auth email rendering', () => {
-  it('renders verification email html and text with the Backstro template', async () => {
+  it('renders verification email html and text with the React Email template', async () => {
     const email = await renderVerifyEmail({
       appName: 'VK',
       name: 'Ada',
@@ -180,7 +180,7 @@ describe('auth email rendering', () => {
     );
   });
 
-  it('renders reset password email html and text with the Backstro template', async () => {
+  it('renders reset password email html and text with the React Email template', async () => {
     const email = await renderResetPasswordEmail({
       appName: 'VK',
       name: 'Ada',

@@ -1,14 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { SendEmailInput } from '@vergekit/core/email';
 
 const { runtimeEnv, send } = vi.hoisted(() => {
-  const send = vi.fn(async () => ({ messageId: 'debug-1' }));
+  const send = vi.fn<(input: SendEmailInput) => Promise<{ messageId: string }>>(
+    async () => ({ messageId: 'debug-1' }),
+  );
 
   return {
     runtimeEnv: {
       EMAIL_PROVIDER: 'cloudflare',
-      EMAIL_FROM: 'VK <noreply@example.com>',
       EMAIL: { send },
-      EMAIL_DEBUG_SECRET: undefined as string | undefined,
     },
     send,
   };
@@ -18,19 +19,15 @@ vi.mock('cloudflare:workers', () => ({
   env: runtimeEnv,
 }));
 
-import { POST } from '@/pages/api/debug/email';
+import { GET } from '@/pages/api/debug/email';
 
 describe('/api/debug/email', () => {
   beforeEach(() => {
     send.mockClear();
-    runtimeEnv.EMAIL_DEBUG_SECRET = undefined;
   });
 
-  it('sends a diagnostic message through the configured mailer', async () => {
-    const response = await postDebugEmail({
-      to: 'ada@example.com',
-      authenticated: true,
-    });
+  it('sends a rendered React Email diagnostic template through the configured mailer', async () => {
+    const response = await GET({} as Parameters<typeof GET>[0]);
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({
@@ -39,74 +36,22 @@ describe('/api/debug/email', () => {
         id: 'debug-1',
       },
     });
-    expect(send).toHaveBeenCalledWith({
-      to: 'ada@example.com',
-      from: 'VK <noreply@example.com>',
-      subject: 'VK email verification test',
-      html: '<p>This is a manual VK email verification message.</p>',
-      text: 'This is a manual VK email verification message.',
-      replyTo: undefined,
-    });
-  });
-
-  it('allows a configured debug secret for manual curl verification', async () => {
-    runtimeEnv.EMAIL_DEBUG_SECRET = 'debug-secret';
-
-    const response = await postDebugEmail({
-      to: 'ada@example.com',
-      headers: { 'x-email-debug-secret': 'debug-secret' },
-    });
-
-    expect(response.status).toBe(200);
     expect(send).toHaveBeenCalledOnce();
-  });
-
-  it('rejects unauthenticated requests without a matching debug secret', async () => {
-    const response = await postDebugEmail({
-      to: 'ada@example.com',
+    expect(send).toHaveBeenCalledWith({
+      to: 'me@example.com',
+      from: { email: 'noreply@resend.example.net', name: 'VK' },
+      subject: 'VK React Email debug test',
+      html: expect.stringContaining('React Email diagnostic'),
+      text: expect.stringContaining('React Email diagnostic'),
     });
 
-    expect(response.status).toBe(401);
-    expect(await response.json()).toEqual({
-      error: 'Unauthorized',
-    });
-    expect(send).not.toHaveBeenCalled();
-  });
+    const message = send.mock.calls[0]![0];
 
-  it('rejects invalid recipient addresses without sending', async () => {
-    const response = await postDebugEmail({
-      to: 'not-an-email',
-      authenticated: true,
-    });
-
-    expect(response.status).toBe(400);
-    expect(await response.json()).toMatchObject({
-      error: 'Invalid request body',
-      issues: {
-        fieldErrors: {
-          to: expect.any(Array),
-        },
-      },
-    });
-    expect(send).not.toHaveBeenCalled();
+    expect(message?.html).toContain('x-apple-disable-message-reformatting');
+    expect(message?.html).toContain('data-skip-in-text="true"');
+    expect(message?.html).toContain('<table');
+    expect(message?.html).toContain('Template source');
+    expect(message?.text).toContain('src/email/demo.tsx');
+    expect(message?.text).toContain('React Email components');
   });
 });
-
-function postDebugEmail({
-  to,
-  authenticated = false,
-  headers = {},
-}: {
-  to: unknown;
-  authenticated?: boolean;
-  headers?: Record<string, string>;
-}) {
-  return POST({
-    request: new Request('https://vk.example.com/api/debug/email', {
-      method: 'POST',
-      body: JSON.stringify({ to }),
-      headers: { 'Content-Type': 'application/json', ...headers },
-    }),
-    locals: { isAuthenticated: authenticated },
-  } as Parameters<typeof POST>[0]);
-}

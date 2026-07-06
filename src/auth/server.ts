@@ -11,7 +11,7 @@ import {
 import { authRoleConfig } from '@/config/auth';
 import * as schema from '@/config/schema';
 import { createD1Database, type AppDatabase } from '@/db/client';
-import { createAuthEmailSenderOptions } from '@/email';
+import { createAuthEmailSenderOptions } from '@/auth/email';
 import {
   createAuthEmailSenderFromEnv,
   type AuthEmailSender,

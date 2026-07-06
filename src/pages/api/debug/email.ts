@@ -1,66 +1,43 @@
 import { env } from 'cloudflare:workers';
 import type { APIRoute } from 'astro';
 import { sendEmail } from '@vergekit/core/email';
-import { jsonFailure, jsonSuccess, parseJsonRequest } from '@vergekit/core/http';
-import { z } from 'zod';
+import { jsonFailure, jsonSuccess } from '@vergekit/core/http';
+import { render } from 'react-email';
+import * as React from 'react';
 import { appConfig } from '@/config/app';
+import DemoEmail from '@/email/demo';
 
-const debugEmailSchema = z.object({
-  to: z.email(),
-});
+const debugRecipient = 'me@example.com';
+const debugFrom = { email: 'noreply@resend.example.net', name: appConfig.name };
 
 export const GET: APIRoute = async () => {
-  return jsonSuccess({
-    message: 'No email for you (enable sendEmail demo before testing)',
+  const subject = `${appConfig.name} React Email debug test`;
+  const component = React.createElement(DemoEmail, {
+    appName: appConfig.name,
+    recipient: debugRecipient,
+    provider: env.EMAIL_PROVIDER || 'unknown',
   });
-};
 
-export const POST: APIRoute = async ({ request, locals }) => {
-  if (!isAuthorizedDebugRequest(request, locals.isAuthenticated)) {
-    return jsonFailure('Unauthorized', { status: 401 });
-  }
+  try {
+    const result = await sendEmail(env, {
+      to: debugRecipient,
+      from: debugFrom,
+      subject,
+      html: await render(component),
+      text: await render(component, { plainText: true }),
+    });
 
-  const parsed = await parseJsonRequest(request, debugEmailSchema);
-
-  if (!parsed.ok) {
-    return parsed.response;
-  }
-
-  const from = env.EMAIL_FROM?.trim();
-
-  if (!from) {
-    return jsonFailure('EMAIL_FROM is required for debug email sends', {
+    return jsonSuccess({
+      provider: result.provider,
+      id: result.id,
+    });
+  } catch (error) {
+    return jsonFailure('Email send failed', {
       status: 500,
+      issues: {
+        message:
+          error instanceof Error ? error.message : 'Unknown email send failure',
+      },
     });
   }
-
-  const result = await sendEmail(env, {
-    to: parsed.data.to,
-    from,
-    subject: `${appConfig.name} email verification test`,
-    html: `<p>This is a manual ${appConfig.name} email verification message.</p>`,
-    text: `This is a manual ${appConfig.name} email verification message.`,
-    replyTo: env.EMAIL_REPLY_TO,
-  });
-
-  return jsonSuccess({
-    provider: result.provider,
-    id: result.id,
-  });
 };
-
-function isAuthorizedDebugRequest(
-  request: Request,
-  isAuthenticated: boolean,
-) {
-  if (isAuthenticated) {
-    return true;
-  }
-
-  const debugSecret = env.EMAIL_DEBUG_SECRET?.trim();
-
-  return Boolean(
-    debugSecret &&
-      request.headers.get('x-email-debug-secret')?.trim() === debugSecret,
-  );
-}

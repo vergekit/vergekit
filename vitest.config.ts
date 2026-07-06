@@ -11,9 +11,6 @@ const astroViteConfig = getViteConfig(
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
-    ssr: {
-      noExternal: ['@backstro/email'],
-    },
   },
   {
     output: 'server',

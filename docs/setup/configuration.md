@@ -26,9 +26,10 @@ Use `src/config` when changing values that the app code should import directly:
 - `src/config/schema.ts`: Drizzle D1 table definitions shared by app code,
   Better Auth, and Drizzle Kit.
 
-Email provider names and fallback behavior stay with `src/email`. Do not put
-environment secrets here. Do not add runtime database target selection here;
-database target selection should wait until Hyperdrive adapters are implemented.
+Email provider selection stays with `@vergekit/core/email`, and auth-email
+fallback/render behavior stays with `src/auth/email.ts`. Do not put environment
+secrets here. Do not add runtime database target selection here; database target
+selection should wait until Hyperdrive adapters are implemented.
 
 ## Worker Runtime Config
 

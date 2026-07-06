@@ -20,7 +20,7 @@ Start new apps with low effort and high confidence.
 - [bejamas/ui](https://ui.bejamas.com") components (based on [shadcn/ui](https://ui.shadcn.com/))
 - [Lucide Astro](https://lucide.dev/guide/astro) icons
 - [Vitest](https://vitest.dev), [happy-dom](https://github.com/capricorn86/happy-dom), [oxlint](https://oxc.rs/docs/guide/usage/linter.html)
-- [`@backstro/email`](https://github.com/backstrojs/email) templates (based on [react-email](https://react.email/))
+- [React Email](https://react.email/) auth email templates
 
 
 
@@ -109,6 +109,12 @@ For local auth flows with real email delivery, put local provider secrets in `.d
 RESEND_API_KEY=your-api-key
 ```
 
+Preview the auth email templates locally:
+
+```bash
+npm run email
+```
+
 
 Start the app:
 ```bash
@@ -127,5 +133,4 @@ npm run dev
 
 
 See `docs/setup/configuration.md` and the [configuration guide](https://vergekit.com/docs/setup/runtime-configuration/).
-
 
