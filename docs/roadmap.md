@@ -4,24 +4,24 @@ This tracker breaks the boilerplate into slices small enough for one focused age
 
 ## Architecture Principle
 
-VK is D1-first and adapter-ready. The first implementation supports Cloudflare D1 only, while app code imports database behavior through stable local modules that can later route to Hyperdrive-backed PostgreSQL or MySQL implementations. App query code must stay inside a conservative Drizzle query-builder subset unless a dialect-specific helper is explicitly introduced.
+VK is D1-first and adapter-ready. The first implementation supports Cloudflare D1 only, while app code imports database behavior through stable local modules. Future Hyperdrive-backed PostgreSQL or MySQL support should be added as a real adapter slice instead of placeholder code. App query code must stay inside a conservative Drizzle query-builder subset unless a dialect-specific helper is explicitly introduced.
 
 ## Slice Tracker
 
 | Slice                       | Status | Goal                                                                                                                              | Verification                                                                    |
 | --------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | 1. Foundation               | Done   | Scaffold Astro on Cloudflare Workers with strict TypeScript, Tailwind 4, baseline tooling, and deployment config.                 | `npm run check`, `npm run build`, `npm run lint`                                |
-| 2. D1 Database Contract     | Done   | Add Drizzle D1 schema, adapter-ready `src/db` surface, and portability proof tests.                                               | `npm run test -- tests/db`, `npm run db:generate`, `npm run check`              |
+| 2. D1 Database Contract     | Done   | Add Drizzle D1 schema and a small local `src/db` D1 client surface.                                                               | `npm run test -- tests/db`, `npm run db:generate`, `npm run check`              |
 | 3. Auth Spine               | Done   | Add Better Auth config, D1-backed schema, auth route, typed locals, and middleware route guards.                                  | `npm run test -- tests/auth tests/middleware`, `npm run check`, `npm run build` |
 | 4. Email Layer              | Done   | Add provider-based mailer with console, Cloudflare Email, Resend, and Mailgun; render auth emails with Backstro.                 | `npm run test -- tests/email`, `npm run check`                                  |
-| 5. Form And API Conventions | Done   | Add Zod parsing helpers, standard JSON responses, Astro Actions patterns, and one sample mutation.                                | `npm run test -- tests/http tests/actions`, `npm run check`                     |
+| 5. Form And API Conventions | Done   | Add Zod parsing helpers, standard JSON responses, and Astro Actions registration patterns.                                        | `npm run test -- tests/http`, `npm run check`                                   |
 | 6. Minimal Auth UI          | Done   | Add Bejamas-derived form components, Lucide Astro icons, login/register/reset/verify pages, custom 404/500 error pages, and dashboard shell. | `npm run check`, `npm run build`, user visual verification                      |
 | 7. Operational Polish       | Done   | Add docs, example env files, D1 setup notes, first ADRs, and CI-ready scripts.                                                    | `npm run verify`, documentation review                                          |
-| 8. Hyperdrive Proof         | Done   | Add non-runtime PostgreSQL/MySQL proof tests for the adapter seam without making Hyperdrive a supported production target yet.    | `npm run test -- tests/db tests/docs`, `npm run check`                          |
+| 8. Future Hyperdrive Notes  | Done   | Document the future D1-or-Hyperdrive implementation checklist without shipping PostgreSQL/MySQL placeholder code.                | `npm run test -- tests/docs`, `npm run check`                                   |
 
 ## First Milestone
 
-Milestone 1 is complete when slices 1 through 3 are done. At that point VK should be an empty but deployable Cloudflare Workers Astro app with a real D1 database layer, Better Auth mounted, middleware locals wired, and a small portability contract that makes future Hyperdrive work tractable.
+Milestone 1 is complete when slices 1 through 3 are done. At that point VK should be an empty but deployable Cloudflare Workers Astro app with a real D1 database layer, Better Auth mounted, middleware locals wired, and documented constraints that make future Hyperdrive work tractable.
 
 ## Dependency Policy
 

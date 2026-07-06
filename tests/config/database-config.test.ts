@@ -24,10 +24,22 @@ describe('database config', () => {
 
     expect(Object.keys(schema).sort()).toEqual([
       'account',
-      'appSettings',
       'session',
       'user',
       'verification',
     ]);
+  });
+
+  it('does not ship app settings proof tables or database target placeholders', () => {
+    const migration = readFileSync(
+      new URL('drizzle/d1/0000_vk_init.sql', projectRoot),
+      'utf8',
+    );
+
+    expect(migration).not.toContain('app_settings');
+    expect(existsSync(new URL('src/db/hyperdrive', projectRoot))).toBe(false);
+    expect(existsSync(new URL('src/db/queries', projectRoot))).toBe(false);
+    expect(existsSync(new URL('src/db/mutations', projectRoot))).toBe(false);
+    expect(existsSync(new URL('src/db/target.ts', projectRoot))).toBe(false);
   });
 });

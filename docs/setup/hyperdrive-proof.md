@@ -1,63 +1,87 @@
-# Hyperdrive Proof
+# Future Hyperdrive Support
 
-D1 remains the only supported runtime database. This slice proves the `src/db`
-boundary can host future Hyperdrive-backed PostgreSQL and MySQL adapters without
-promoting either target to production support.
+D1 remains the only supported runtime database. Hyperdrive production support is
+still deferred, and the boilerplate does not ship PostgreSQL or MySQL adapters,
+target parsing, or placeholder mutations.
 
-The proof modules under `src/db/hyperdrive` are imported by tests only. Runtime
-code should continue to create databases through the D1 path. PostgreSQL and
-MySQL target names remain proof-only and should stay rejected by
-`parseDatabaseTarget`.
+This note preserves the implementation strategy for moving from D1-only support
+to a future "D1 or Hyperdrive" database layer without keeping speculative code in
+new applications.
 
-## Schema Comparison
+## Current Runtime Boundary
 
-| Table          | SQLite D1                               | PostgreSQL Hyperdrive proof           | MySQL Hyperdrive proof                 |
-| -------------- | --------------------------------------- | ------------------------------------- | -------------------------------------- |
-| `app_settings` | `text` key, `text` value, integer dates | `text` key, `text` value, timestamptz | `varchar(128)` key, `text`, timestamps |
+- The Worker receives one D1 binding named `DB`.
+- Runtime code creates the Drizzle client through `src/db/client.ts`.
+- App routes, actions, middleware, and UI code should not import
+  `drizzle-orm/d1` directly.
+- `src/config/schema.ts` is the Drizzle schema entrypoint for the current D1
+  schema.
+- There is no database target selection runtime path today.
 
-The D1 schema stores app-owned dates as integer timestamp values because that is
-the existing SQLite contract. The PostgreSQL and MySQL proof schemas use native
-timestamp columns because those dialects have first-class timestamp support. Any
-future migration from proof to runtime support must define the serialization
-boundary for these date values before writes are enabled.
+## Future Hyperdrive Support Checklist
 
-`app_settings` is used here as the smallest app-owned table that exercises the
-database boundary: a keyed settings row can be read through the same logical
-helper on D1, PostgreSQL, and MySQL proof targets. Its presence in the proof does
-not make it a database management table. Runtime writes remain D1-only through
-the app settings action until Hyperdrive support is promoted beyond proof-only
-read compilation.
+Add Hyperdrive support as a real feature slice, not as placeholders in the
+boilerplate. The slice should include:
+
+- A stable database interface in `@vergekit/core` once both the D1 adapter and at
+  least one Hyperdrive adapter use it.
+- D1, PostgreSQL, and MySQL target names with explicit database target selection
+  at the application boundary.
+- Worker binding configuration for Hyperdrive, including local development
+  behavior and deployed environment examples.
+- Driver dependencies and adapter factories for the supported Hyperdrive
+  engines.
+- PostgreSQL and MySQL schema definitions plus migration workflows, rather than
+  relying on the SQLite D1 migration directory.
+- Tests that compile the same supported read helpers against D1 and each
+  Hyperdrive target.
+- Tests that prove unsupported targets fail with a clear error.
+- Documentation for operational differences between D1 and Hyperdrive-backed
+  databases.
 
 ## Portable query patterns
 
+- Keep app-level database calls behind local helpers or a future core database
+  interface.
 - Prefer Drizzle query-builder reads using `select`, `from`, `where`, and
   parameterized predicates such as `eq`.
-- Keep app query call sites behind local helpers such as
-  `selectAppSettingByKey`, so target factories can compile the same logical
-  query for SQLite, PostgreSQL, or MySQL.
-- Keep deterministic read queries separate from mutations. Hyperdrive can cache
-  read queries, while writes must remain explicit and consistency-aware.
+- Keep deterministic reads separate from writes. Hyperdrive can cache reads, but
+  writes need explicit consistency decisions.
+- Add dialect-specific helpers when a query needs SQL fragments, JSON operators,
+  generated columns, full-text search, indexes, or other database-specific
+  behavior.
 
-## Dialect-specific helpers
+## Mutation semantics
 
-Dialect-specific helpers are required before using:
+Do not enable writes for a Hyperdrive target until these differences are
+specified and tested:
 
-- Upserts, because SQLite `onConflictDoUpdate`, PostgreSQL `on conflict`, and
-  MySQL `on duplicate key update` have different Drizzle APIs.
-- Date/time expressions, because SQLite integer timestamps differ from native
-  PostgreSQL and MySQL timestamp columns.
-- Raw SQL fragments, full-text search, JSON operators, generated columns, and
-  database-specific indexes.
-- MySQL connection-field usage, because MySQL drivers may use Hyperdrive `host`,
-  `port`, `user`, `password`, and `database` fields instead of only a connection
-  string.
+- Upserts, because SQLite, PostgreSQL, and MySQL expose different Drizzle APIs.
+- Date serialization, because D1 commonly stores integer timestamps while
+  PostgreSQL and MySQL can use native timestamp columns.
+- Transaction behavior and retry policy.
+- Error normalization for unique constraints, foreign keys, and connection
+  failures.
+- Read-after-write expectations when Hyperdrive caching is involved.
 
-## Gap list
+## Better Auth adapter
+
+Before promoting Hyperdrive to a supported runtime target, decide how Better
+Auth will select its database provider and schema:
+
+- D1 should continue to use the SQLite Drizzle adapter path.
+- PostgreSQL support needs a PostgreSQL Drizzle schema and Better Auth provider
+  setting.
+- MySQL support needs a MySQL Drizzle schema and Better Auth provider setting.
+- Tests should initialize auth options for each supported target without opening
+  real network connections.
+
+## Deferred Work
 
 - Hyperdrive production support is still deferred.
-- PostgreSQL and MySQL target names still throw when parsed as runtime targets.
-- No PostgreSQL or MySQL migrations are generated.
+- No PostgreSQL or MySQL migrations are generated today.
 - No real Hyperdrive binding is configured in `wrangler.jsonc`.
-- No PostgreSQL or MySQL driver dependency is required by this proof.
-- Writes remain D1-only until upsert and timestamp semantics are specified per
-  dialect.
+- No PostgreSQL or MySQL driver dependency is required by the current
+  boilerplate.
+- No database interface is exported from `@vergekit/core` until it has concrete
+  D1 and Hyperdrive implementations.
