@@ -5,7 +5,7 @@ import {
   extractAuthErrorMessage,
   handleAuthFormSubmit,
   resolveAuthRedirectTarget,
-} from '@/auth/browser';
+} from '@vergekit/core/auth';
 
 function createAuthForm(action = '/api/auth/sign-in/email') {
   document.body.innerHTML = `

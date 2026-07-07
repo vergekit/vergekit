@@ -89,16 +89,9 @@ Verification and password-reset emails use the higher-level auth helper:
 ```ts
 import { env } from 'cloudflare:workers';
 import { createAuthEmailSenderFromEnv } from '@vergekit/core/email';
-import { renderResetPasswordEmail, renderVerifyEmail } from '@/auth/email';
-import { createAuthEmailSenderOptions } from '@/config/auth';
+import { authEmailOptions } from '@/config/auth-email';
 
-const authEmail = createAuthEmailSenderFromEnv(
-  env,
-  createAuthEmailSenderOptions({
-    renderVerificationEmail: renderVerifyEmail,
-    renderResetPasswordEmail,
-  }),
-);
+const authEmail = createAuthEmailSenderFromEnv(env, authEmailOptions);
 
 await authEmail.sendVerificationEmail({
   to: 'customer@example.com',
@@ -108,12 +101,13 @@ await authEmail.sendVerificationEmail({
 ```
 
 `createAuthEmailSenderFromEnv` resolves the mailer and sender from runtime env.
-`createAuthEmailSenderOptions` lives in `src/config/auth.ts` and supplies the
-app's auth email defaults. With `EMAIL_PROVIDER=console`, it falls back to
+`authEmailOptions` lives in `src/config/auth-email.ts` and supplies the app's
+auth email defaults. With `EMAIL_PROVIDER=console`, it falls back to
 `noreply@example.test` and the app name from `src/config/app.ts`.
 
-The default auth render helpers are in `src/auth/email.ts`, and the templates
-are `src/email/auth/verify-email.tsx` and `src/email/auth/reset-password.tsx`.
+Customize transactional auth email behavior in `src/config/auth-email.ts`. The
+email templates stay in `src/email/auth/verify-email.tsx` and
+`src/email/auth/reset-password.tsx`.
 Preview them with the React Email CLI:
 
 ```bash

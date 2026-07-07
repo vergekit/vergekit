@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/ui/Icon.astro';
 import { appConfig } from '@/config/app';
-import { authRouteConfig } from '@/config/auth';
+import { authConfig } from '@/config/auth';
 import Button from '@/components/ui/form/Button.astro';
 
 const isAuthenticated = Astro.locals.isAuthenticated;
@@ -36,7 +36,7 @@ const isAuthenticated = Astro.locals.isAuthenticated;
         </div>
       ) : (
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button as="a" href={authRouteConfig.loginPath}>
+          <Button as="a" href={authConfig.routes.loginPath}>
             <Icon name="log-in" size={18} aria-hidden="true" />
             Sign in
           </Button>

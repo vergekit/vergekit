@@ -5,14 +5,18 @@ import { describe, expect, it } from 'vitest';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 
 describe('React Email template setup', () => {
-  it('keeps auth templates in src/email/auth and email utilities out of src/email', () => {
+  it('keeps src/email/auth limited to templates', () => {
     expect(existsSync(`${root}src/email/auth/verify-email.tsx`)).toBe(true);
     expect(existsSync(`${root}src/email/auth/reset-password.tsx`)).toBe(true);
+    expect(
+      existsSync(`${root}${['src', 'email', 'auth', 'render.ts'].join('/')}`),
+    ).toBe(false);
     expect(existsSync(`${root}src/email/verify-email.tsx`)).toBe(false);
     expect(existsSync(`${root}src/email/reset-password.tsx`)).toBe(false);
     expect(existsSync(`${root}src/email/demo.tsx`)).toBe(true);
     expect(existsSync(`${root}src/email/index.ts`)).toBe(false);
-    expect(existsSync(`${root}src/auth/email.ts`)).toBe(true);
+    expect(existsSync(`${root}${['src', 'auth'].join('/')}`)).toBe(false);
+    expect(existsSync(`${root}src/config/auth-email.ts`)).toBe(true);
     expect(existsSync(`${root}src/email/templates/verify-email.astro`)).toBe(
       false,
     );

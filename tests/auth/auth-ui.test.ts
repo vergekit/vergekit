@@ -112,8 +112,8 @@ describe('minimal auth UI contract', () => {
   it('links the app bootstrap page to the login and registration screens', () => {
     const source = readProjectFile('src/pages/index.astro');
 
-    expect(source).toContain("import { authRouteConfig } from '@/config/auth'");
-    expect(source).toContain('href={authRouteConfig.loginPath}');
+    expect(source).toContain("import { authConfig } from '@/config/auth'");
+    expect(source).toContain('href={authConfig.routes.loginPath}');
     expect(source).toContain('href="/register"');
   });
 
@@ -145,8 +145,10 @@ describe('minimal auth UI contract', () => {
       expect(source).toContain(`id="${contract.id}"`);
       expect(source).toContain('aria-live="polite"');
       expect(source).toContain(
-        "import { mountAuthForms } from '@/auth/browser'",
+        "import { mountAuthForms } from '@vergekit/core/auth'",
       );
+      expect(source).toContain('authConfig');
+      expect(source).toContain('appConfig.defaultAuthenticatedPath');
     }
   });
 

@@ -5,12 +5,15 @@ vi.mock('cloudflare:workers', () => ({
   },
 }));
 
-import { buildAuthOptions } from '@/auth/server';
+import { buildAuthOptions } from '@vergekit/core/auth';
 import {
+  authEmailOptions,
   renderResetPasswordEmail,
   renderVerifyEmail,
-} from '@/auth/email';
-import { createAuthEmailSenderOptions } from '@/config/auth';
+} from '@/config/auth-email';
+import { createAuthEmailSenderOptions } from '@/config/auth-email';
+import { authConfig } from '@/config/auth';
+import * as schema from '@/config/schema';
 import {
   createAuthEmailSender,
   createCloudflareEmailProvider,
@@ -212,10 +215,7 @@ describe('Better Auth email hooks', () => {
     const {
       renderVerificationEmail,
       renderResetPasswordEmail: renderResetPasswordEmailRenderer,
-    } = createAuthEmailSenderOptions({
-      renderVerificationEmail: renderVerifyEmail,
-      renderResetPasswordEmail,
-    });
+    } = authEmailOptions;
     const authEmail = createAuthEmailSender({
       from: 'accounts@example.com',
       mailer: {
@@ -229,6 +229,8 @@ describe('Better Auth email hooks', () => {
     });
     const options = buildAuthOptions({
       database: {} as AppDatabase,
+      schema,
+      authConfig,
       baseURL: 'https://vk.example.com',
       secret: 'test-secret-with-at-least-32-characters',
       authEmail,
@@ -258,6 +260,12 @@ describe('Better Auth email hooks', () => {
       subject: 'Reset your VK password',
     });
     expect(sent[1]?.html).toContain('reset-token');
+
+    const customOptions = createAuthEmailSenderOptions({
+      renderVerificationEmail: renderVerifyEmail,
+      renderResetPasswordEmail,
+    });
+    expect(customOptions.fallbackFromName).toBe('VK');
   });
 });
 

@@ -1,25 +1,32 @@
 import { describe, expect, it } from 'vitest';
-import { resolveRouteAccess } from '@/auth/routes';
+import { resolveRouteAccess } from '@vergekit/core/auth';
+import { authConfig } from '@/config/auth';
 
 describe('resolveRouteAccess', () => {
   it('allows public paths without a session', () => {
-    expect(resolveRouteAccess('/', false)).toEqual({ type: 'allow' });
-    expect(resolveRouteAccess('/about', false)).toEqual({ type: 'allow' });
-    expect(resolveRouteAccess('/api/auth/sign-in', false)).toEqual({
+    expect(resolveRouteAccess(authConfig, '/', false)).toEqual({
       type: 'allow',
     });
-    expect(resolveRouteAccess('/api/health', false)).toEqual({
+    expect(resolveRouteAccess(authConfig, '/about', false)).toEqual({
+      type: 'allow',
+    });
+    expect(resolveRouteAccess(authConfig, '/api/auth/sign-in', false)).toEqual({
+      type: 'allow',
+    });
+    expect(resolveRouteAccess(authConfig, '/api/health', false)).toEqual({
       type: 'allow',
     });
   });
 
   it('allows protected paths with a session', () => {
-    expect(resolveRouteAccess('/dashboard', true)).toEqual({ type: 'allow' });
+    expect(resolveRouteAccess(authConfig, '/dashboard', true)).toEqual({
+      type: 'allow',
+    });
   });
 
   it('blocks banned users from authenticated app routes', () => {
     expect(
-      resolveRouteAccess('/dashboard', {
+      resolveRouteAccess(authConfig, '/dashboard', {
         isAuthenticated: true,
         user: { role: 'banned' },
       }),
@@ -27,20 +34,20 @@ describe('resolveRouteAccess', () => {
   });
 
   it('requires admin app permission for admin routes', () => {
-    expect(resolveRouteAccess('/admin', false)).toEqual({
+    expect(resolveRouteAccess(authConfig, '/admin', false)).toEqual({
       type: 'redirect',
       location: '/login?redirectTo=%2Fadmin',
     });
 
     expect(
-      resolveRouteAccess('/admin/users', {
+      resolveRouteAccess(authConfig, '/admin/users', {
         isAuthenticated: true,
         user: { role: 'user' },
       }),
     ).toEqual({ type: 'forbidden' });
 
     expect(
-      resolveRouteAccess('/admin/users', {
+      resolveRouteAccess(authConfig, '/admin/users', {
         isAuthenticated: true,
         user: { role: 'admin' },
       }),
@@ -48,18 +55,20 @@ describe('resolveRouteAccess', () => {
   });
 
   it('redirects unauthenticated page requests to login', () => {
-    expect(resolveRouteAccess('/dashboard', false)).toEqual({
+    expect(resolveRouteAccess(authConfig, '/dashboard', false)).toEqual({
       type: 'redirect',
       location: '/login?redirectTo=%2Fdashboard',
     });
-    expect(resolveRouteAccess('/dashboard?tab=billing', false)).toEqual({
+    expect(
+      resolveRouteAccess(authConfig, '/dashboard?tab=billing', false),
+    ).toEqual({
       type: 'redirect',
       location: '/login?redirectTo=%2Fdashboard%3Ftab%3Dbilling',
     });
   });
 
   it('allows API routes without a session', () => {
-    expect(resolveRouteAccess('/api/private', false)).toEqual({
+    expect(resolveRouteAccess(authConfig, '/api/private', false)).toEqual({
       type: 'allow',
     });
   });

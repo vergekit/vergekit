@@ -2,17 +2,29 @@ import { env } from 'cloudflare:workers';
 import type { APIRoute } from 'astro';
 import {
   createSignOutAuthRequest,
+  createAuthFromEnv,
   resolveSignOutRedirectPath,
   shouldRedirectSignOutRequest,
-} from '@/auth/routes';
-import { createAuthFromEnv } from '@/auth/server';
+} from '@vergekit/core/auth';
+import { authConfig } from '@/config/auth';
+import { authEmailOptions } from '@/config/auth-email';
+import * as schema from '@/config/schema';
+import { db } from '@/db';
 
 export const ALL: APIRoute = async ({ request }) => {
-  const shouldRedirectSignOut = shouldRedirectSignOutRequest(request);
-  const authRequest = createSignOutAuthRequest(request);
-  const authResponse = await createAuthFromEnv(env, authRequest).handler(
-    authRequest,
+  const shouldRedirectSignOut = shouldRedirectSignOutRequest(
+    authConfig,
+    request,
   );
+  const authRequest = createSignOutAuthRequest(authConfig, request);
+  const authResponse = await createAuthFromEnv({
+    runtimeEnv: env,
+    request: authRequest,
+    database: db,
+    schema,
+    authConfig,
+    authEmailOptions,
+  }).handler(authRequest);
 
   if (!authResponse.ok || !shouldRedirectSignOut) {
     return authResponse;

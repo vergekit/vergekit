@@ -99,8 +99,13 @@ const redirectTo =
   </p>
 
   <script>
-    import { mountAuthForms } from '@/auth/browser';
+    import { mountAuthForms } from '@vergekit/core/auth';
+    import { appConfig } from '@/config/app';
+    import { authConfig } from '@/config/auth';
 
-    mountAuthForms();
+    mountAuthForms(document, {
+      authConfig,
+      defaultSuccessRedirect: appConfig.defaultAuthenticatedPath,
+    });
   </script>
 </AuthShell>

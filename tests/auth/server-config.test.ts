@@ -5,7 +5,9 @@ import {
   createAuthFromEnv,
   resolveAuthBaseURL,
   resolveAuthSecret,
-} from '@/auth/server';
+} from '@vergekit/core/auth';
+import { authConfig } from '@/config/auth';
+import * as schema from '@/config/schema';
 import type { AppDatabase } from '@/db';
 
 vi.mock('cloudflare:workers', () => ({
@@ -20,6 +22,8 @@ describe('Better Auth server config', () => {
   it('enables email and password auth with explicit Workers-safe config inputs', () => {
     const options = buildAuthOptions({
       database,
+      schema,
+      authConfig,
       baseURL: 'https://vk.example.com',
       secret: 'test-secret-with-at-least-32-characters',
     });
@@ -33,6 +37,8 @@ describe('Better Auth server config', () => {
   it('creates a Better Auth handler and session API from the shared database seam', () => {
     const auth = createAuth({
       database,
+      schema,
+      authConfig,
       baseURL: 'https://vk.example.com',
       secret: 'test-secret-with-at-least-32-characters',
     });
@@ -51,10 +57,13 @@ describe('Better Auth server config', () => {
       EMAIL_PROVIDER: 'console',
     };
 
-    const auth = createAuthFromEnv(
+    const auth = createAuthFromEnv({
       runtimeEnv,
-      new Request('https://vk.example.com/dashboard'),
-    );
+      request: new Request('https://vk.example.com/dashboard'),
+      database,
+      schema,
+      authConfig,
+    });
 
     expect(auth.handler).toBeTypeOf('function');
   });
@@ -84,6 +93,8 @@ describe('Better Auth server config', () => {
   it('blocks session creation for users assigned the banned app role', async () => {
     const options = buildAuthOptions({
       database,
+      schema,
+      authConfig,
       baseURL: 'https://vk.example.com',
       secret: 'test-secret-with-at-least-32-characters',
     });
