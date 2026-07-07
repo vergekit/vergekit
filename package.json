@@ -23,7 +23,7 @@
   "dependencies": {
     "@astrojs/cloudflare": "^14.0.1",
     "@tailwindcss/vite": "^4.3.1",
-    "@vergekit/core": "^0.0.1",
+    "@vergekit/core": "^0.0.2",
     "astro": "^7.0.3",
     "better-auth": "^1.6.19",
     "class-variance-authority": "^0.7.1",
