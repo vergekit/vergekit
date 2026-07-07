@@ -7,37 +7,45 @@ import * as React from 'react';
 import { appConfig } from '@/config/app';
 import DemoEmail from '@/email/demo';
 
-const debugRecipient = 'me@example.com';
-const debugFrom = { email: 'noreply@resend.example.net', name: appConfig.name };
+
+// const debugRecipient = 'me@example.com';
+// const debugFrom = { email: 'noreply@resend.example.net', name: appConfig.name };
+
+// export const GET: APIRoute = async () => {
+//   const subject = `${appConfig.name} React Email debug test`;
+//   const component = React.createElement(DemoEmail, {
+//     appName: appConfig.name,
+//     recipient: debugRecipient,
+//     provider: env.EMAIL_PROVIDER || 'unknown',
+//   });
+
+//   try {
+//     const result = await sendEmail(env, {
+//       to: debugRecipient,
+//       from: debugFrom,
+//       subject,
+//       html: await render(component),
+//       text: await render(component, { plainText: true }),
+//     });
+
+//     return jsonSuccess({
+//       provider: result.provider,
+//       id: result.id,
+//     });
+//   } catch (error) {
+//     return jsonFailure('Email send failed', {
+//       status: 500,
+//       issues: {
+//         message:
+//           error instanceof Error ? error.message : 'Unknown email send failure',
+//       },
+//     });
+//   }
+// };
+
 
 export const GET: APIRoute = async () => {
-  const subject = `${appConfig.name} React Email debug test`;
-  const component = React.createElement(DemoEmail, {
-    appName: appConfig.name,
-    recipient: debugRecipient,
-    provider: env.EMAIL_PROVIDER || 'unknown',
+  return jsonSuccess({
+    message: 'No email for you (enable sendEmail demo before testing)',
   });
-
-  try {
-    const result = await sendEmail(env, {
-      to: debugRecipient,
-      from: debugFrom,
-      subject,
-      html: await render(component),
-      text: await render(component, { plainText: true }),
-    });
-
-    return jsonSuccess({
-      provider: result.provider,
-      id: result.id,
-    });
-  } catch (error) {
-    return jsonFailure('Email send failed', {
-      status: 500,
-      issues: {
-        message:
-          error instanceof Error ? error.message : 'Unknown email send failure',
-      },
-    });
-  }
 };
