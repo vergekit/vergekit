@@ -1,4 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
+vi.mock('cloudflare:workers', () => ({
+  env: {
+    DB: {},
+  },
+}));
+
 import { buildAuthOptions } from '@/auth/server';
 import {
   createAuthEmailSenderOptions,
@@ -15,7 +21,7 @@ import {
   sendEmail,
 } from '@vergekit/core/email';
 import type { Fetcher, SendEmailInput } from '@vergekit/core/email';
-import type { AppDatabase } from '@/db/client';
+import type { AppDatabase } from '@/db';
 
 const message = {
   to: 'ada@example.com',

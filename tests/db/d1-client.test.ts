@@ -1,7 +1,13 @@
 import { eq } from 'drizzle-orm';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { user } from '@/config/schema';
-import { createD1Database } from '@/db/client';
+import { createD1Database } from '@/db';
+
+vi.mock('cloudflare:workers', () => ({
+  env: {
+    DB: {},
+  },
+}));
 
 describe('createD1Database', () => {
   it('creates a D1 drizzle client with the auth schema query surface', () => {

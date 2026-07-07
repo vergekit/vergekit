@@ -1,7 +1,13 @@
 import { eq, getTableName } from 'drizzle-orm';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { account, session, user, verification } from '@/config/schema';
-import { createD1Database } from '@/db/client';
+import { createD1Database } from '@/db';
+
+vi.mock('cloudflare:workers', () => ({
+  env: {
+    DB: {},
+  },
+}));
 
 describe('Better Auth D1 schema', () => {
   it('exposes the core Better Auth table names expected by the Drizzle adapter', () => {

@@ -15,6 +15,8 @@ describe('database config', () => {
 
   it('uses the single config schema file for D1 schema definitions', async () => {
     expect(existsSync(new URL('src/config/schema.ts', projectRoot))).toBe(true);
+    expect(existsSync(new URL('src/db.ts', projectRoot))).toBe(true);
+    expect(existsSync(new URL('src/db', projectRoot))).toBe(false);
     expect(existsSync(new URL('src/db/schema', projectRoot))).toBe(false);
     expect((drizzleConfig as { schema?: string }).schema).toBe(
       './src/config/schema.ts',

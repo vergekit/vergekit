@@ -2,10 +2,17 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   buildAuthOptions,
   createAuth,
+  createAuthFromEnv,
   resolveAuthBaseURL,
   resolveAuthSecret,
 } from '@/auth/server';
-import type { AppDatabase } from '@/db/client';
+import type { AppDatabase } from '@/db';
+
+vi.mock('cloudflare:workers', () => ({
+  env: {
+    DB: {},
+  },
+}));
 
 describe('Better Auth server config', () => {
   const database = {} as AppDatabase;
@@ -32,6 +39,24 @@ describe('Better Auth server config', () => {
 
     expect(auth.handler).toBeTypeOf('function');
     expect(auth.api.getSession).toBeTypeOf('function');
+  });
+
+  it('uses the initialized app database when creating runtime auth', () => {
+    const runtimeEnv = {
+      get DB(): D1Database {
+        throw new Error('createAuthFromEnv should not read runtimeEnv.DB');
+      },
+      BETTER_AUTH_SECRET: 'test-secret-with-at-least-32-characters',
+      BETTER_AUTH_URL: 'https://vk.example.com',
+      EMAIL_PROVIDER: 'console',
+    };
+
+    const auth = createAuthFromEnv(
+      runtimeEnv,
+      new Request('https://vk.example.com/dashboard'),
+    );
+
+    expect(auth.handler).toBeTypeOf('function');
   });
 
   it('resolves auth base URL from an explicit binding or the current request', () => {

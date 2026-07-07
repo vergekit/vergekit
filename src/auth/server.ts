@@ -10,7 +10,7 @@ import {
 } from '@/auth/permissions';
 import { authRoleConfig } from '@/config/auth';
 import * as schema from '@/config/schema';
-import { createD1Database, type AppDatabase } from '@/db/client';
+import { db, type AppDatabase } from '@/db';
 import { createAuthEmailSenderOptions } from '@/auth/email';
 import {
   createAuthEmailSenderFromEnv,
@@ -26,7 +26,6 @@ export interface CreateAuthOptions {
 }
 
 export interface AuthRuntimeEnv extends EmailRuntimeEnv {
-  DB: D1Database;
   BETTER_AUTH_SECRET?: string;
   BETTER_AUTH_URL?: string;
 }
@@ -150,7 +149,7 @@ export function createAuthFromEnv(
   request: Request,
 ) {
   return createAuth({
-    database: createD1Database(runtimeEnv.DB),
+    database: db,
     baseURL: resolveAuthBaseURL(runtimeEnv, request),
     secret: resolveAuthSecret(runtimeEnv),
     authEmail: createAuthEmailSenderFromEnv(

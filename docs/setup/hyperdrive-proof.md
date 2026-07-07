@@ -11,7 +11,7 @@ new applications.
 ## Current Runtime Boundary
 
 - The Worker receives one D1 binding named `DB`.
-- Runtime code creates the Drizzle client through `src/db/client.ts`.
+- Runtime code creates the Drizzle client through `src/db.ts`.
 - App routes, actions, middleware, and UI code should not import
   `drizzle-orm/d1` directly.
 - `src/config/schema.ts` is the Drizzle schema entrypoint for the current D1

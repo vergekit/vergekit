@@ -19,7 +19,7 @@ database operational models before the app has a real need for them.
 ## Decision
 
 VK is D1-first at runtime. Application code imports database behavior through the
-local `src/db` surface, not from `drizzle-orm/d1` directly. Schema and query code
+local `src/db.ts` surface, not from `drizzle-orm/d1` directly. Schema and query code
 must stay inside a conservative Drizzle query-builder subset unless a
 dialect-specific helper is introduced with a documented portability boundary.
 
