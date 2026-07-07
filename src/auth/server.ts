@@ -1,17 +1,15 @@
 import { drizzleAdapter } from '@better-auth/drizzle-adapter';
 import { APIError, betterAuth, type BetterAuthOptions } from 'better-auth';
 import { admin as adminPlugin } from 'better-auth/plugins';
+import { isAppBannedUser } from '@/auth/permissions';
 import {
-  ADMIN_APP_ROLES,
-  DEFAULT_APP_ROLE,
-  accessControl,
-  authRoles,
-  isAppBannedUser,
-} from '@/auth/permissions';
-import { authRoleConfig } from '@/config/auth';
+  authRoleConfig,
+  createAuthEmailSenderOptions,
+  createAuthServerPlugins,
+} from '@/config/auth';
 import * as schema from '@/config/schema';
 import { db, type AppDatabase } from '@/db';
-import { createAuthEmailSenderOptions } from '@/auth/email';
+import { renderResetPasswordEmail, renderVerifyEmail } from '@/auth/email';
 import {
   createAuthEmailSenderFromEnv,
   type AuthEmailSender,
@@ -104,14 +102,7 @@ export function buildAuthOptions({
           },
         }
       : undefined,
-    plugins: [
-      adminPlugin({
-        defaultRole: DEFAULT_APP_ROLE,
-        adminRoles: [...ADMIN_APP_ROLES],
-        ac: accessControl,
-        roles: authRoles,
-      }),
-    ],
+    plugins: createAuthServerPlugins({ adminPlugin }),
   };
 }
 
@@ -154,7 +145,10 @@ export function createAuthFromEnv(
     secret: resolveAuthSecret(runtimeEnv),
     authEmail: createAuthEmailSenderFromEnv(
       runtimeEnv,
-      createAuthEmailSenderOptions(),
+      createAuthEmailSenderOptions({
+        renderVerificationEmail: renderVerifyEmail,
+        renderResetPasswordEmail,
+      }),
     ),
   });
 }

@@ -1,7 +1,6 @@
 import { render } from 'react-email';
 import type {
   AuthEmailTemplateInput,
-  CreateAuthEmailSenderFromEnvOptions,
   RenderedAuthEmail,
 } from '@vergekit/core/email';
 import * as React from 'react';
@@ -11,17 +10,6 @@ import VerifyEmail from '@/email/auth/verify-email';
 
 export interface RenderAppAuthEmailInput extends AuthEmailTemplateInput {
   appName?: string;
-}
-
-export function createAuthEmailSenderOptions(): Pick<
-  CreateAuthEmailSenderFromEnvOptions,
-  'fallbackFromName' | 'renderVerificationEmail' | 'renderResetPasswordEmail'
-> {
-  return {
-    fallbackFromName: appConfig.name,
-    renderVerificationEmail: renderVerifyEmail,
-    renderResetPasswordEmail: renderResetPasswordEmail,
-  };
 }
 
 export async function renderVerifyEmail({

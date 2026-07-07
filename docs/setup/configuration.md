@@ -22,14 +22,16 @@ Use `src/config` when changing values that the app code should import directly:
 
 - `src/config/app.ts`: app identity and default navigation paths.
 - `src/config/auth.ts`: middleware route policy, admin route policy, app roles,
-  app permission values, and banned-session copy.
+  app permission values, Better Auth plugin option composition, auth-email
+  sender defaults, browser auth fallback copy, and banned-session copy.
 - `src/config/schema.ts`: Drizzle D1 table definitions shared by app code,
   Better Auth, and Drizzle Kit.
 
-Email provider selection stays with `@vergekit/core/email`, and auth-email
-fallback/render behavior stays with `src/auth/email.ts`. Do not put environment
-secrets here. Do not add runtime database target selection here; database target
-selection should wait until Hyperdrive adapters are implemented.
+Email provider selection stays with `@vergekit/core/email`, while auth-email
+sender defaults live in `src/config/auth.ts` and the React Email templates live
+under `src/email/auth`. Do not put environment secrets here. Do not add runtime
+database target selection here; database target selection should wait until
+Hyperdrive adapters are implemented.
 
 ## Worker Runtime Config
 

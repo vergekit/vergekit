@@ -1,7 +1,8 @@
 import { appConfig } from '@/config/app';
+import { authBrowserConfig } from '@/config/auth';
 
 export const DEFAULT_AUTH_ERROR_MESSAGE =
-  "We couldn't complete that request. Check the fields and try again.";
+  authBrowserConfig.defaultErrorMessage;
 
 type Fetcher = typeof fetch;
 

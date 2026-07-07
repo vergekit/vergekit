@@ -7,10 +7,10 @@ vi.mock('cloudflare:workers', () => ({
 
 import { buildAuthOptions } from '@/auth/server';
 import {
-  createAuthEmailSenderOptions,
   renderResetPasswordEmail,
   renderVerifyEmail,
 } from '@/auth/email';
+import { createAuthEmailSenderOptions } from '@/config/auth';
 import {
   createAuthEmailSender,
   createCloudflareEmailProvider,
@@ -209,8 +209,13 @@ describe('auth email rendering', () => {
 describe('Better Auth email hooks', () => {
   it('wires verification and reset hooks through the auth email sender', async () => {
     const sent: SendEmailInput[] = [];
-    const { renderVerificationEmail, renderResetPasswordEmail } =
-      createAuthEmailSenderOptions();
+    const {
+      renderVerificationEmail,
+      renderResetPasswordEmail: renderResetPasswordEmailRenderer,
+    } = createAuthEmailSenderOptions({
+      renderVerificationEmail: renderVerifyEmail,
+      renderResetPasswordEmail,
+    });
     const authEmail = createAuthEmailSender({
       from: 'accounts@example.com',
       mailer: {
@@ -220,7 +225,7 @@ describe('Better Auth email hooks', () => {
         },
       },
       renderVerificationEmail,
-      renderResetPasswordEmail,
+      renderResetPasswordEmail: renderResetPasswordEmailRenderer,
     });
     const options = buildAuthOptions({
       database: {} as AppDatabase,

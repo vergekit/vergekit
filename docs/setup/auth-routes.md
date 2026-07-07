@@ -18,18 +18,21 @@ reserved for users with the `app:administer` permission.
 ## Better Auth Plugins
 
 The Better Auth admin plugin is installed and configured. Server-side Better
-Auth plugins live in the `plugins` array in `src/auth/server.ts`; the matching
-browser client plugins live in the `plugins` array in `src/auth/client.ts`.
+Auth plugins live in `createAuthServerPlugins()` in `src/config/auth.ts`; the
+matching browser client plugins live in `createAuthClientPlugins()` in
+`src/config/auth.ts`.
 
 When adding or modifying a Better Auth plugin, check the full plugin surface:
 
-- `src/auth/server.ts` for server plugin imports, plugin options, database
-  hooks, and runtime config used by Better Auth.
-- `src/auth/client.ts` for matching client plugin imports and client-side
-  options.
-- `src/config/auth.ts` for app roles and app permission values.
-- `src/auth/permissions.ts` for Better Auth access-control construction and
-  role normalization.
+- `src/config/auth.ts` for server and client plugin option composition, app
+  roles, app permission values, access-control construction, auth email
+  options, and browser auth fallback copy.
+- `src/auth/server.ts` for providing server plugin factories, database hooks,
+  and runtime config used by Better Auth.
+- `src/auth/client.ts` for providing client plugin factories and initializing
+  the Better Auth client.
+- `src/auth/permissions.ts` for role normalization and permission helpers used
+  by app code.
 - `src/config/schema.ts` and `drizzle/d1/*` migrations for plugin-required
   tables or columns.
 - `src/env.d.ts` when the plugin changes the session or user fields exposed on

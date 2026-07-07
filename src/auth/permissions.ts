@@ -1,17 +1,21 @@
 import type { User } from 'better-auth';
-import { createAccessControl } from 'better-auth/plugins/access';
 import {
-  adminAc,
-  defaultStatements,
-} from 'better-auth/plugins/admin/access';
-import { authRoleConfig } from '@/config/auth';
+  APP_ROLES,
+  DEFAULT_APP_ROLE,
+  authRoles,
+  type AppPermissionRequest,
+  type AppRole,
+} from '@/config/auth';
 
-export const APP_ROLES = authRoleConfig.roles;
-export type AppRole = (typeof APP_ROLES)[number];
-
-export const DEFAULT_APP_ROLE = authRoleConfig.defaultRole satisfies AppRole;
-export const ADMIN_APP_ROLES =
-  authRoleConfig.adminRoles satisfies readonly AppRole[];
+export {
+  ADMIN_APP_ROLES,
+  APP_ROLES,
+  DEFAULT_APP_ROLE,
+  accessControl,
+  accessStatements,
+  authRoles,
+} from '@/config/auth';
+export type { AppPermissionRequest, AppRole } from '@/config/auth';
 
 export interface AppUserFields {
   role?: string | null;
@@ -21,47 +25,6 @@ export interface AppUserFields {
 }
 
 export type AppUser = User & AppUserFields;
-
-export const accessStatements = {
-  ...defaultStatements,
-  app: authRoleConfig.appStatements,
-} as const;
-
-export const accessControl = createAccessControl(accessStatements);
-
-const emptyAdminPermissions = {
-  user: [],
-  session: [],
-} as const;
-
-export const adminRole = accessControl.newRole({
-  ...adminAc.statements,
-  app: authRoleConfig.roleAppPermissions.admin,
-});
-
-export const moderatorRole = accessControl.newRole({
-  ...emptyAdminPermissions,
-  app: authRoleConfig.roleAppPermissions.moderator,
-});
-
-export const userRole = accessControl.newRole({
-  ...emptyAdminPermissions,
-  app: authRoleConfig.roleAppPermissions.user,
-});
-
-export const bannedRole = accessControl.newRole({
-  ...emptyAdminPermissions,
-  app: authRoleConfig.roleAppPermissions.banned,
-});
-
-export const authRoles = {
-  admin: adminRole,
-  moderator: moderatorRole,
-  user: userRole,
-  banned: bannedRole,
-} as const;
-
-export type AppPermissionRequest = Parameters<typeof adminRole.authorize>[0];
 
 export function isAppRole(value: string): value is AppRole {
   return APP_ROLES.includes(value as AppRole);
