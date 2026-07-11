@@ -13,14 +13,14 @@ Start new apps with low effort and high confidence.
 
 - [Astro](https://astro.build) - SSR with strict
   [TypeScript](https://www.typescriptlang.org) and [Cloudflare Workers](https://workers.dev) adapter
-- [Cloudflare D1](https://developers.cloudflare.com/d1/)
-- [Drizzle](https://orm.drizzle.team)
+- [Cloudflare D1](https://developers.cloudflare.com/d1/) - SQLite databsae
+- [Drizzle](https://orm.drizzle.team) - ORM, schema, migrations
 - [Better Auth](https://www.better-auth.com) w/ [admin plugin](https://www.better-auth.com/docs/plugins/admin)
-- [Tailwind CSS](https://tailwindcss.com)
+- [Tailwind](https://tailwindcss.com) - CSS utility classes
 - [bejamas/ui](https://ui.bejamas.com) components (based on [shadcn/ui](https://ui.shadcn.com/))
 - [Lucide Astro](https://lucide.dev/guide/astro) icons
 - [React Email](https://react.email/) components and templates
-- [Vitest](https://vitest.dev), [happy-dom](https://github.com/capricorn86/happy-dom), [oxlint](https://oxc.rs/docs/guide/usage/linter.html)
+- [Vitest](https://vitest.dev), [happy-dom](https://github.com/capricorn86/happy-dom), and [oxlint](https://oxc.rs/docs/guide/usage/linter.html), and integrated npm verification scripts
 
 
 
