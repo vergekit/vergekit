@@ -1,7 +1,7 @@
 # Verge Kit
 
 
-Verge Kit is a solid foundation for building web apps with [Astro](https://astro.build) and the [Cloudflare Workers](https://workers.dev) ecosystem.
+[Verge Kit](https://vergekit.com) is a solid foundation for building web apps with [Astro](https://astro.build) and the [Cloudflare Workers](https://workers.dev) ecosystem.
 
 It's a pre-wired stack of dependencies and minimal boilerplate designed to help LLMs produce reliable and understandable applications.
 
