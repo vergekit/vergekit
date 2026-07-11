@@ -25,7 +25,7 @@ Start new apps with low effort and high confidence.
 
 
 
-## Boilerplate
+## The Boilerplate
 
 - Middleware that loads auth state into typed `Astro.locals`
 - Public-by-default route authorization with opt-in protected pages and APIs
@@ -62,7 +62,7 @@ writes a fresh Better Auth secret:
 cp .dev.vars.example .dev.vars && secret="$(openssl rand -base64 32)" && awk -v secret="$secret" 'BEGIN { done = 0 } /^BETTER_AUTH_SECRET=/ { print "BETTER_AUTH_SECRET=" secret; done = 1; next } { print } END { if (!done) print "BETTER_AUTH_SECRET=" secret }' .dev.vars > .dev.vars.tmp && mv .dev.vars.tmp .dev.vars
 ```
 
-Manual installation instructions: https://vergekit.com/docs/installation/
+See [the docs](https://vergekit.com/docs/installation/) for manual installation instructions.
 
 Apply local D1 migrations:
 
@@ -70,19 +70,13 @@ Apply local D1 migrations:
 npm run db:migrate:local
 ```
 
-Inspect the local schema and data with Drizzle Studio:
-
-```bash
-npm run db:studio
-```
-
-Optionally create a verified local user with the `admin` role after migrations:
+Optionally create a verified local user with the `admin` role:
 
 ```bash
 npm run init:admin
 ```
 
-Configure the email provider before testing registration, verification, or password reset. Put shared non-secret provider configuration in `wrangler.jsonc`:
+Configure the email provider by adding a shared non-secret provider configuration in `wrangler.jsonc`:
 
 ```jsonc
 {
