@@ -1,51 +1,65 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import Icon from '@/components/ui/Icon.astro';
-import { appConfig } from '@/config/app';
-import { authConfig } from '@/config/auth';
-import Button from '@/components/ui/form/Button.astro';
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { LayoutDashboardIcon, LogInIcon, UserPlusIcon } from "@lucide/astro";
+import { appConfig } from "@/config/app";
+import { authConfig } from "@/config/auth";
+import { Button } from "@/components/ui/button";
 
 const isAuthenticated = Astro.locals.isAuthenticated;
 ---
 
 <BaseLayout title={appConfig.name}>
   <main
-    class="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-16"
+    class="min-h-screen bg-slate-50 px-4 py-16 text-slate-950 sm:px-6 lg:px-8"
   >
-    <div class="flex items-center gap-3 text-sm font-medium text-slate-600">
-      <img src="/favicon.svg" alt={appConfig.name} class="w-6" />
-      <span>{appConfig.displayName}</span>
-    </div>
+    <section
+      class="mx-auto flex min-h-[calc(100vh-8rem)] w-full max-w-3xl items-center"
+    >
+      <div
+        class="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+      >
+        <a href="https://vergekit.com" target="_blank" class="inline-flex items-center gap-3 text-sm font-medium text-slate-600">
+          <img src="/favicon.svg" alt={appConfig.name} class="w-6" />
+          <span>{appConfig.displayName}</span>
+        </a>
 
-    <h1 class="mt-5 text-4xl font-semibold tracking-normal text-slate-950">
-      The application base for Astro and Cloudflare Workers.
-    </h1>
+        <h1 class="mt-5 text-4xl font-semibold tracking-normal text-slate-950">
+          The application base for <a
+            href="https://astro.build"
+            class="text-violet-500 hover:underline">Astro</a
+          > and <a
+            href="https://workers.dev"
+            class="text-orange-500 hover:underline">Cloudflare Workers</a
+          >
+        </h1>
 
-    <p class="mt-4 max-w-2xl text-base leading-7 text-slate-600">
-      This starter provides a small blank application that preserves seams for auth,
-      database adapters, forms, and email.
-    </p>
+        <p class="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+          This starter provides a small blank application that provides patterns for authentication, database adapters, forms, and email.
+          Learn more at <a href="https://vergekit.com" class="underline">vergekit.com</a>.
+        </p>
 
-    {
-      isAuthenticated ? (
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button as="a" href={appConfig.defaultAuthenticatedPath}>
-            <Icon name="layout-dashboard" size={18} aria-hidden="true" />
-            Dashboard
-          </Button>
-        </div>
-      ) : (
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button as="a" href={authConfig.routes.loginPath}>
-            <Icon name="log-in" size={18} aria-hidden="true" />
-            Sign in
-          </Button>
-          <Button as="a" href="/register" variant="secondary">
-            <Icon name="user-plus" size={18} aria-hidden="true" />
-            Create account
-          </Button>
-        </div>
-      )
-    }
+        {
+          isAuthenticated ? (
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button as="a" href={appConfig.defaultAuthenticatedPath}>
+                <LayoutDashboardIcon aria-hidden="true" />
+                Dashboard
+              </Button>
+            </div>
+          ) : (
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button as="a" href={authConfig.routes.loginPath}>
+                <LogInIcon aria-hidden="true" />
+                Sign in
+              </Button>
+              <Button as="a" href="/register" variant="secondary">
+                <UserPlusIcon aria-hidden="true" />
+                Create account
+              </Button>
+            </div>
+          )
+        }
+      </div>
+    </section>
   </main>
 </BaseLayout>

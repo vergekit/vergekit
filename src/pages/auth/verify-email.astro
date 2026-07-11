@@ -1,10 +1,10 @@
 ---
 import AuthShell from '@/components/auth/AuthShell.astro';
-import Field from '@/components/ui/form/Field.astro';
-import Icon from '@/components/ui/Icon.astro';
+import { BadgeCheckIcon } from '@lucide/astro';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { appConfig } from '@/config/app';
-import Button from '@/components/ui/form/Button.astro';
-import Input from '@/components/ui/form/Input.astro';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 ---
 
 <AuthShell
@@ -32,7 +32,8 @@ import Input from '@/components/ui/form/Input.astro';
       value={appConfig.defaultAuthenticatedPath}
     />
 
-    <Field id="verify-email" label="Email" required>
+    <Field>
+      <FieldLabel for="verify-email">Email</FieldLabel>
       <Input
         id="verify-email"
         name="email"
@@ -44,7 +45,7 @@ import Input from '@/components/ui/form/Input.astro';
     </Field>
 
     <Button type="submit" class="w-full">
-      <Icon name="badge-check" size={18} aria-hidden="true" />
+      <BadgeCheckIcon aria-hidden="true" />
       Send verification
     </Button>
   </form>

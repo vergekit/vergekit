@@ -114,9 +114,11 @@ Preview them with the React Email CLI:
 npm run email
 ```
 
-The debug email route at `src/pages/api/debug/email.ts` renders
-`src/email/demo.tsx`, which is a diagnostic React Email template for verifying
-template rendering and provider delivery together.
+The debug email route at `src/pages/api/debug/email.ts` returns a non-sending
+response by default. To test delivery manually, enable the commented
+implementation in that file; it renders `src/email/demo.tsx` and sends it
+through the configured provider to verify template rendering and delivery
+together.
 
 Use this helper for Better Auth verification and reset flows. Use `sendEmail`
 directly for other transactional messages.

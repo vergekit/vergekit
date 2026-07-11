@@ -1,9 +1,9 @@
 ---
 import AuthShell from '@/components/auth/AuthShell.astro';
-import Field from '@/components/ui/form/Field.astro';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { appConfig } from '@/config/app';
-import Button from '@/components/ui/form/Button.astro';
-import Input from '@/components/ui/form/Input.astro';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const redirectTo =
   Astro.url.searchParams.get('redirectTo') ??
@@ -42,18 +42,19 @@ const redirectTo =
     >
     </p>
 
-    <Field id="login-email" label="Email" required>
+    <Field>
+      <FieldLabel for="login-email">Email</FieldLabel>
       <Input
         id="login-email"
         name="email"
         type="email"
         autocomplete="email"
-        placeholder="you@example.com"
         required
       />
     </Field>
 
-    <Field id="login-password" label="Password" required>
+    <Field>
+      <FieldLabel for="login-password">Password</FieldLabel>
       <Input
         id="login-password"
         name="password"
@@ -77,7 +78,7 @@ const redirectTo =
 
       <a
         href="/auth/forgot-password"
-        class="font-medium text-slate-950 hover:text-emerald-700"
+        class="text-slate-600 underline hover:opacity-75"
       >
         Forgot password?
       </a>
@@ -89,10 +90,10 @@ const redirectTo =
   </form>
 
   <p class="mt-6 text-center text-sm text-slate-600">
-    New here?
+    New here? &nbsp;
     <a
       href="/register"
-      class="font-medium text-slate-950 hover:text-emerald-700"
+      class="text-slate-600 underline hover:opacity-75"
     >
       Create an account
     </a>

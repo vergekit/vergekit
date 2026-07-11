@@ -17,37 +17,33 @@ Start new apps with low effort and high confidence.
 - [Drizzle](https://orm.drizzle.team)
 - [Better Auth](https://www.better-auth.com) w/ [admin plugin](https://www.better-auth.com/docs/plugins/admin)
 - [Tailwind CSS](https://tailwindcss.com)
-- [bejamas/ui](https://ui.bejamas.com") components (based on [shadcn/ui](https://ui.shadcn.com/))
+- [bejamas/ui](https://ui.bejamas.com) components (based on [shadcn/ui](https://ui.shadcn.com/))
 - [Lucide Astro](https://lucide.dev/guide/astro) icons
+- [React Email](https://react.email/) components and templates
 - [Vitest](https://vitest.dev), [happy-dom](https://github.com/capricorn86/happy-dom), [oxlint](https://oxc.rs/docs/guide/usage/linter.html)
-- [React Email](https://react.email/) auth email templates
 
 
 
 
 ## Boilerplate
 
+minimal application structure (just enough to get you started)
 
-We've also configured middleware, basic auth flows, route protection, user roles, and transactional email utilities.
+The boilerplate includes configured authentication, middleware, route protection, transactional email, and supporting application utilities:
 
-- Email providers for console,
-  [Cloudflare Email](https://developers.cloudflare.com/email-service/),
-  [Resend](https://resend.com), [Mailgun](https://www.mailgun.com)
-
-- CSRF origin checks through [Astro config](https://docs.astro.build/en/guides/security/)
-
-- and local Astro UI components
-
-- and verification scripts
-  - helper scripts (all the npm run stuff)
-
-- with email/password, email verification, reset password, and D1 storage
-  - roles for `admin`, `moderator`, `user`, and `banned`
-- Register, login, logout, email verification, forgot password, and reset password flows
+- Basic authentication flows (register, login, logout, email verification, forgot password, and reset password)
+- Better Auth email/password authentication with D1 storage
+- User roles for `admin`, `moderator`, `user`, and `banned`
 - Middleware that loads auth state into typed `Astro.locals`
-- Public-by-default route auth with opt-in protected pages and APIs
+- Public-by-default route authorization with opt-in protected pages and APIs
+- Transactional email providers for console output,
+  [Cloudflare Email](https://developers.cloudflare.com/email-service/),
+  [Resend](https://resend.com), and [Mailgun](https://www.mailgun.com)
+- CSRF origin checks through [Astro config](https://docs.astro.build/en/guides/security/)
+- Local Astro UI components
 - Custom 404 and 500 error pages
 - API response helpers
+- Verification and helper scripts exposed through npm scripts
 
 
 
@@ -127,10 +123,10 @@ npm run dev
 
 ## Documentation
 
+See `docs/setup/configuration.md` and the [configuration guide](https://vergekit.com/docs/setup/runtime-configuration/).
+
 ?? support (i don't want to hear about your problems, but let me know if you find an actual bug)
 ?? license
 ?? contributing? (please don't)
 
-
-See `docs/setup/configuration.md` and the [configuration guide](https://vergekit.com/docs/setup/runtime-configuration/).
 

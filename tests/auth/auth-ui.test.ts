@@ -9,9 +9,16 @@ function readProjectFile(path: string) {
 
 describe('minimal auth UI contract', () => {
   const requiredFiles = [
-    'src/components/ui/form/Button.astro',
-    'src/components/ui/form/Input.astro',
-    'src/components/ui/form/Field.astro',
+    'src/components/ui/button/Button.astro',
+    'src/components/ui/button/index.ts',
+    'src/components/ui/input/Input.astro',
+    'src/components/ui/input/index.ts',
+    'src/components/ui/field/Field.astro',
+    'src/components/ui/field/FieldLabel.astro',
+    'src/components/ui/field/index.ts',
+    'src/components/ui/label/Label.astro',
+    'src/components/ui/separator/Separator.astro',
+    'src/lib/utils.ts',
     'src/components/auth/AuthShell.astro',
     'src/pages/login.astro',
     'src/pages/register.astro',
@@ -27,14 +34,24 @@ describe('minimal auth UI contract', () => {
     expect(existsSync(new URL(path, projectRoot))).toBe(true);
   });
 
-  it('uses Bejamas-generated button and input components in auth UI', () => {
-    const buttonSource = readProjectFile('src/components/ui/form/Button.astro');
-    const inputSource = readProjectFile('src/components/ui/form/Input.astro');
+  it('uses stock Bejamas components and imports in auth UI', () => {
+    const buttonSource = readProjectFile('src/components/ui/button/Button.astro');
+    const inputSource = readProjectFile('src/components/ui/input/Input.astro');
+    const fieldSource = readProjectFile('src/components/ui/field/Field.astro');
+    const fieldIndexSource = readProjectFile('src/components/ui/field/index.ts');
 
     expect(buttonSource).toContain('buttonVariants');
     expect(buttonSource).toContain('data-slot="button"');
+    expect(buttonSource).toContain('from "@/lib/utils"');
     expect(inputSource).toContain('inputVariants');
     expect(inputSource).toContain('data-slot={props["data-slot"] ?? "input"}');
+    expect(inputSource).toContain('from "@/lib/utils"');
+    expect(fieldSource).toContain('fieldVariants');
+    expect(fieldSource).toContain('data-slot="field"');
+    expect(fieldSource).toContain('from "@/lib/utils"');
+    expect(fieldIndexSource).toContain(
+      'export { default as FieldLabel } from "./FieldLabel.astro"',
+    );
 
     const buttonPages = [
       'src/pages/index.astro',
@@ -56,16 +73,26 @@ describe('minimal auth UI contract', () => {
     for (const page of buttonPages) {
       const source = readProjectFile(page);
 
-      expect(source).toContain("from '@/components/ui/form/Button.astro'");
-      expect(source).not.toContain("from '@/ui/button'");
+      expect(source).toContain('@/components/ui/button');
+      expect(source).not.toContain('@/components/ui/form/Button.astro');
     }
 
     for (const page of inputPages) {
       const source = readProjectFile(page);
 
-      expect(source).toContain("from '@/components/ui/form/Input.astro'");
-      expect(source).not.toContain("from '@/ui/input'");
+      expect(source).toContain('@/components/ui/input');
+      expect(source).toContain('@/components/ui/field');
+      expect(source).not.toContain('@/components/ui/form/Input.astro');
     }
+  });
+
+  it('uses the local Bejamas class-name utility', () => {
+    const componentsConfig = readProjectFile('components.json');
+    const utilsSource = readProjectFile('src/lib/utils.ts');
+
+    expect(componentsConfig).toContain('"utils": "@/lib/utils"');
+    expect(utilsSource).toContain('export function cn');
+    expect(utilsSource).toContain('twMerge(clsx(inputs))');
   });
 
   it('wires auth forms to the mounted Better Auth endpoints', () => {
@@ -112,7 +139,7 @@ describe('minimal auth UI contract', () => {
   it('links the app bootstrap page to the login and registration screens', () => {
     const source = readProjectFile('src/pages/index.astro');
 
-    expect(source).toContain("import { authConfig } from '@/config/auth'");
+    expect(source).toContain('@/config/auth');
     expect(source).toContain('href={authConfig.routes.loginPath}');
     expect(source).toContain('href="/register"');
   });
@@ -121,7 +148,7 @@ describe('minimal auth UI contract', () => {
     const source = readProjectFile('src/pages/index.astro');
 
     expect(source).toContain('Astro.locals.isAuthenticated');
-    expect(source).toContain("import { appConfig } from '@/config/app'");
+    expect(source).toContain('@/config/app');
     expect(source).toContain('href={appConfig.defaultAuthenticatedPath}');
   });
 

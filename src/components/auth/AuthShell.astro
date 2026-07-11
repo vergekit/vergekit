@@ -1,7 +1,6 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import Icon from '@/components/ui/Icon.astro';
-import { appConfig } from '@/config/app';
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { appConfig } from "@/config/app";
 
 interface Props {
   title: string;
@@ -24,11 +23,7 @@ const { title, eyebrow, description } = Astro.props;
           href="/"
           class="inline-flex items-center gap-3 text-sm font-semibold text-slate-950"
         >
-          <span
-            class="flex size-10 items-center justify-center rounded-lg bg-slate-950 text-white shadow-sm"
-          >
-            <Icon name="shield-check" size={20} aria-hidden="true" />
-          </span>
+          <img src="/favicon.svg" alt={appConfig.name} class="h-6" />
           {appConfig.name}
         </a>
 
@@ -51,11 +46,7 @@ const { title, eyebrow, description } = Astro.props;
             href="/"
             class="inline-flex items-center gap-3 text-sm font-semibold text-slate-950"
           >
-            <span
-              class="flex size-10 items-center justify-center rounded-lg bg-slate-950 text-white shadow-sm"
-            >
-              <Icon name="shield-check" size={20} aria-hidden="true" />
-            </span>
+            <img src="/favicon.svg" alt={appConfig.name} class="h-6" />
             {appConfig.name}
           </a>
 

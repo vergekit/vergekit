@@ -1,10 +1,10 @@
 ---
 import AuthShell from '@/components/auth/AuthShell.astro';
-import Field from '@/components/ui/form/Field.astro';
-import Icon from '@/components/ui/Icon.astro';
+import { UserPlusIcon } from '@lucide/astro';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { appConfig } from '@/config/app';
-import Button from '@/components/ui/form/Button.astro';
-import Input from '@/components/ui/form/Input.astro';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 ---
 
 <AuthShell
@@ -43,28 +43,29 @@ import Input from '@/components/ui/form/Input.astro';
     >
     </p>
 
-    <Field id="register-name" label="Name" required>
+    <Field>
+      <FieldLabel for="register-name">Name</FieldLabel>
       <Input
         id="register-name"
         name="name"
         autocomplete="name"
-        placeholder="Ada Lovelace"
         required
       />
     </Field>
 
-    <Field id="register-email" label="Email" required>
+    <Field>
+      <FieldLabel for="register-email">Email</FieldLabel>
       <Input
         id="register-email"
         name="email"
         type="email"
         autocomplete="email"
-        placeholder="you@example.com"
         required
       />
     </Field>
 
-    <Field id="register-password" label="Password" required>
+    <Field>
+      <FieldLabel for="register-password">Password</FieldLabel>
       <Input
         id="register-password"
         name="password"
@@ -76,14 +77,14 @@ import Input from '@/components/ui/form/Input.astro';
     </Field>
 
     <Button type="submit" class="w-full">
-      <Icon name="user-plus" size={18} aria-hidden="true" />
+      <UserPlusIcon aria-hidden="true" />
       Create account
     </Button>
   </form>
 
   <p class="mt-6 text-center text-sm text-slate-600">
-    Already registered?
-    <a href="/login" class="font-medium text-slate-950 hover:text-emerald-700">
+    Already registered? &nbsp;
+    <a href="/login" class="text-slate-600 underline hover:opacity-75">
       Sign in
     </a>
   </p>

@@ -1,12 +1,15 @@
-import { env } from 'cloudflare:workers';
-import type { APIRoute } from 'astro';
-import { sendEmail } from '@vergekit/core/email';
-import { jsonFailure, jsonSuccess } from '@vergekit/core/http';
-import { render } from 'react-email';
-import * as React from 'react';
-import { appConfig } from '@/config/app';
-import DemoEmail from '@/email/demo';
 
+import type { APIRoute } from 'astro';
+import { jsonSuccess } from '@vergekit/core/http';
+
+
+// import { jsonFailure } from '@vergekit/core/http';
+// import { env } from 'cloudflare:workers';
+// import { sendEmail } from '@vergekit/core/email';
+// import { render } from 'react-email';
+// import * as React from 'react';
+// import { appConfig } from '@/config/app';
+// import DemoEmail from '@/email/demo';
 
 // const debugRecipient = 'me@example.com';
 // const debugFrom = { email: 'noreply@resend.example.net', name: appConfig.name };
