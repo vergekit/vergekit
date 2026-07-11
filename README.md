@@ -114,7 +114,7 @@ Setup and operational guides are available in [`docs/setup`](docs/setup),
 including configuration, D1, authentication routes, email, and deployment. The
 hosted documentation is available at [vergekit.com/docs](https://vergekit.com/docs/).
 
-### Support
+## Support
 
 Verge Kit is maintained as a technical starting point rather than a managed
 application support service. If you find a reproducible defect in the
@@ -123,13 +123,13 @@ with the Verge Kit version, runtime environment, reproduction steps, and the
 expected and actual behavior. Debugging application-specific changes and
 providing implementation consulting are outside the project's support scope.
 
-### Contributing
+## Contributing
 
 The project is not currently accepting external feature contributions or pull
 requests. This keeps the reference stack focused and its implementation
 decisions consistent. Clear bug reports are welcome through the issue tracker.
 
-### License
+## License
 
 Verge Kit is available under the [MIT License](https://opensource.org/license/mit).
 
