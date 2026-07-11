@@ -27,22 +27,16 @@ Start new apps with low effort and high confidence.
 
 ## Boilerplate
 
-minimal application structure (just enough to get you started)
-
-The boilerplate includes configured authentication, middleware, route protection, transactional email, and supporting application utilities:
-
-- Basic authentication flows (register, login, logout, email verification, forgot password, and reset password)
-- Better Auth email/password authentication with D1 storage
-- User roles for `admin`, `moderator`, `user`, and `banned`
 - Middleware that loads auth state into typed `Astro.locals`
 - Public-by-default route authorization with opt-in protected pages and APIs
-- Transactional email providers for console output,
-  [Cloudflare Email](https://developers.cloudflare.com/email-service/),
-  [Resend](https://resend.com), and [Mailgun](https://www.mailgun.com)
 - CSRF origin checks through [Astro config](https://docs.astro.build/en/guides/security/)
-- Local Astro UI components
 - Custom 404 and 500 error pages
-- API response helpers
+- D1-backed Drizzle schema, migrations, and typed database client
+- Basic authentication flows (register, login, logout, email verification, forgot password, and reset password) with requisite email notifications
+- Configurable user roles and permissions for `admin`, `moderator`, `user`, and `banned`
+- Transactional email providers for console output,
+  [Resend](https://resend.com), [Mailgun](https://www.mailgun.com),
+  and [Cloudflare Email](https://developers.cloudflare.com/email-service/)
 - Verification and helper scripts exposed through npm scripts
 
 
@@ -105,13 +99,6 @@ For local auth flows with real email delivery, put local provider secrets in `.d
 RESEND_API_KEY=your-api-key
 ```
 
-Preview the auth email templates locally:
-
-```bash
-npm run email
-```
-
-
 Start the app:
 ```bash
 npm run dev
@@ -123,10 +110,26 @@ npm run dev
 
 ## Documentation
 
-See `docs/setup/configuration.md` and the [configuration guide](https://vergekit.com/docs/setup/runtime-configuration/).
+Setup and operational guides are available in [`docs/setup`](docs/setup),
+including configuration, D1, authentication routes, email, and deployment. The
+hosted documentation is available at [vergekit.com/docs](https://vergekit.com/docs/).
 
-?? support (i don't want to hear about your problems, but let me know if you find an actual bug)
-?? license
-?? contributing? (please don't)
+### Support
 
+Verge Kit is maintained as a technical starting point rather than a managed
+application support service. If you find a reproducible defect in the
+boilerplate, please [open an issue](https://github.com/vergekit/vergekit/issues)
+with the Verge Kit version, runtime environment, reproduction steps, and the
+expected and actual behavior. Debugging application-specific changes and
+providing implementation consulting are outside the project's support scope.
+
+### Contributing
+
+The project is not currently accepting external feature contributions or pull
+requests. This keeps the reference stack focused and its implementation
+decisions consistent. Clear bug reports are welcome through the issue tracker.
+
+### License
+
+Verge Kit is available under the [MIT License](https://opensource.org/license/mit).
 
