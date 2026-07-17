@@ -63,4 +63,15 @@ const { title, eyebrow, description } = Astro.props;
       </div>
     </section>
   </main>
+
+  <script>
+    import { mountAuthForms } from '@vergekit/core/auth';
+    import { appConfig } from '@/config/app';
+    import { authConfig } from '@/config/auth';
+
+    mountAuthForms(document, {
+      authConfig,
+      defaultSuccessRedirect: appConfig.defaultAuthenticatedPath,
+    });
+  </script>
 </BaseLayout>

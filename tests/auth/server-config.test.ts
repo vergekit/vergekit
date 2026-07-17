@@ -10,12 +10,6 @@ import { authConfig } from '@/config/auth';
 import * as schema from '@/config/schema';
 import type { AppDatabase } from '@/db';
 
-vi.mock('cloudflare:workers', () => ({
-  env: {
-    DB: {},
-  },
-}));
-
 describe('Better Auth server config', () => {
   const database = {} as AppDatabase;
 
@@ -30,7 +24,13 @@ describe('Better Auth server config', () => {
 
     expect(options.baseURL).toBe('https://vk.example.com');
     expect(options.secret).toBe('test-secret-with-at-least-32-characters');
-    expect(options.emailAndPassword).toEqual({ enabled: true });
+    expect(options.emailAndPassword).toEqual({
+      enabled: true,
+      requireEmailVerification: true,
+    });
+    expect(options.emailVerification).toEqual({
+      autoSignInAfterVerification: true,
+    });
     expect(options.plugins?.map((plugin) => plugin.id)).toContain('admin');
   });
 

@@ -1,4 +1,3 @@
-import { env } from 'cloudflare:workers';
 import type { APIRoute } from 'astro';
 import {
   createSignOutAuthRequest,
@@ -9,7 +8,8 @@ import {
 import { authConfig } from '@/config/auth';
 import { authEmailOptions } from '@/config/auth-email';
 import * as schema from '@/config/schema';
-import { db } from '@/db';
+import { authDatabaseProvider, db } from '@/db';
+import { runtimeEnv } from '@/runtime';
 
 export const ALL: APIRoute = async ({ request }) => {
   const shouldRedirectSignOut = shouldRedirectSignOutRequest(
@@ -18,12 +18,15 @@ export const ALL: APIRoute = async ({ request }) => {
   );
   const authRequest = createSignOutAuthRequest(authConfig, request);
   const authResponse = await createAuthFromEnv({
-    runtimeEnv: env,
+    runtimeEnv,
     request: authRequest,
     database: db,
     schema,
     authConfig,
     authEmailOptions,
+    drizzle: {
+      provider: authDatabaseProvider,
+    },
   }).handler(authRequest);
 
   if (!authResponse.ok || !shouldRedirectSignOut) {

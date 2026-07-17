@@ -1,9 +1,4 @@
 import { describe, expect, it, vi } from 'vitest';
-vi.mock('cloudflare:workers', () => ({
-  env: {
-    DB: {},
-  },
-}));
 
 import { buildAuthOptions } from '@vergekit/core/auth';
 import {

@@ -70,6 +70,8 @@ Apply local D1 migrations:
 npm run db:migrate:local
 ```
 
+Inspect the local database with `npm run db:studio`.
+
 Optionally create a verified local user with the `admin` role:
 
 ```bash
@@ -105,7 +107,8 @@ npm run dev
 ## Documentation
 
 Setup and operational guides are available in [`docs/setup`](docs/setup),
-including configuration, D1, authentication routes, email, and deployment. The
+including [configuration](docs/setup/configuration.md), D1, authentication
+routes, email, and deployment. The
 hosted documentation is available at [vergekit.com/docs](https://vergekit.com/docs/).
 
 ## Support

@@ -25,11 +25,22 @@ import { Input } from '@/components/ui/input';
     method="post"
     action="/api/auth/send-verification-email"
     class="space-y-5"
+    data-auth-form
+    data-auth-error="verify-email-error"
+    data-auth-success-url="/auth/check-email"
   >
     <input
       type="hidden"
       name="callbackURL"
       value={appConfig.defaultAuthenticatedPath}
+    />
+
+    <p
+      id="verify-email-error"
+      class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+      role="alert"
+      aria-live="polite"
+      hidden
     />
 
     <Field>
@@ -39,7 +50,6 @@ import { Input } from '@/components/ui/input';
         name="email"
         type="email"
         autocomplete="email"
-        placeholder="you@example.com"
         required
       />
     </Field>
@@ -51,7 +61,7 @@ import { Input } from '@/components/ui/input';
   </form>
 
   <p class="mt-6 text-center text-sm text-slate-600">
-    Already verified?
+    Already verified? &nbsp;
     <a href="/login" class="font-medium text-slate-950 hover:text-emerald-700">
       Sign in
     </a>

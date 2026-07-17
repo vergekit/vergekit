@@ -7,13 +7,19 @@ import {
   resolveAuthRedirectTarget,
 } from '@vergekit/core/auth';
 
-function createAuthForm(action = '/api/auth/sign-in/email') {
+function createAuthForm(
+  action = '/api/auth/sign-in/email',
+  successURL?: string,
+  fields = `
+    <input type="hidden" name="callbackURL" value="/dashboard" />
+    <input name="email" value="ada@example.com" />
+    <input name="password" value="correct horse battery staple" />
+    <input type="checkbox" name="rememberMe" value="true" checked />
+  `,
+) {
   document.body.innerHTML = `
-    <form data-auth-form data-auth-error="auth-error" method="post" action="${action}">
-      <input type="hidden" name="callbackURL" value="/dashboard" />
-      <input name="email" value="ada@example.com" />
-      <input name="password" value="correct horse battery staple" />
-      <input type="checkbox" name="rememberMe" value="true" checked />
+    <form data-auth-form data-auth-error="auth-error" ${successURL ? `data-auth-success-url="${successURL}"` : ''} method="post" action="${action}">
+      ${fields}
       <button type="submit">Submit</button>
       <p id="auth-error" hidden></p>
     </form>
@@ -88,17 +94,73 @@ describe('auth form browser behavior', () => {
     );
   });
 
-  it('falls back to the callback URL for successful sign-up responses', async () => {
-    const form = createAuthForm('/api/auth/sign-up/email');
+  it('sends successful unverified sign-ups to the check-email page', async () => {
+    const form = createAuthForm(
+      '/api/auth/sign-up/email',
+      '/auth/check-email',
+    );
     const fetcher = vi.fn<typeof fetch>(async () => {
       return Response.json({
-        token: 'session-token',
+        token: null,
         user: { id: 'user_123' },
       });
     });
 
     await expect(handleAuthFormSubmit(form, { fetcher })).resolves.toBe(
-      '/dashboard',
+      '/auth/check-email',
+    );
+  });
+
+  it('requests a password reset as JSON and shows the generic sent state', async () => {
+    const form = createAuthForm(
+      '/api/auth/request-password-reset',
+      '/auth/forgot-password?sent=1',
+      `
+        <input name="email" value="ada@example.com" />
+        <input name="redirectTo" value="/auth/reset-password" />
+      `,
+    );
+    const fetcher = vi.fn<typeof fetch>(async () => {
+      return Response.json({
+        status: true,
+        message: 'If this email exists, check your inbox',
+      });
+    });
+
+    await expect(handleAuthFormSubmit(form, { fetcher })).resolves.toBe(
+      '/auth/forgot-password?sent=1',
+    );
+    const [, init] = fetcher.mock.calls[0]!;
+    expect(init?.body).toBe(
+      JSON.stringify({
+        email: 'ada@example.com',
+        redirectTo: '/auth/reset-password',
+      }),
+    );
+  });
+
+  it('submits a replacement password and returns to sign in', async () => {
+    const form = createAuthForm(
+      '/api/auth/reset-password',
+      '/login?passwordReset=1',
+      `
+        <input name="newPassword" value="replacement password" />
+        <input name="token" value="reset-token" />
+      `,
+    );
+    const fetcher = vi.fn<typeof fetch>(async () => {
+      return Response.json({ status: true });
+    });
+
+    await expect(handleAuthFormSubmit(form, { fetcher })).resolves.toBe(
+      '/login?passwordReset=1',
+    );
+    const [, init] = fetcher.mock.calls[0]!;
+    expect(init?.body).toBe(
+      JSON.stringify({
+        newPassword: 'replacement password',
+        token: 'reset-token',
+      }),
     );
   });
 

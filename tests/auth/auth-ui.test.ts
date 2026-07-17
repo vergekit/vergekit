@@ -22,6 +22,7 @@ describe('minimal auth UI contract', () => {
     'src/components/auth/AuthShell.astro',
     'src/pages/login.astro',
     'src/pages/register.astro',
+    'src/pages/auth/check-email.astro',
     'src/pages/auth/forgot-password.astro',
     'src/pages/auth/reset-password.astro',
     'src/pages/auth/verify-email.astro',
@@ -58,6 +59,7 @@ describe('minimal auth UI contract', () => {
       'src/pages/dashboard.astro',
       'src/pages/login.astro',
       'src/pages/register.astro',
+      'src/pages/auth/check-email.astro',
       'src/pages/auth/forgot-password.astro',
       'src/pages/auth/reset-password.astro',
       'src/pages/auth/verify-email.astro',
@@ -162,6 +164,21 @@ describe('minimal auth UI contract', () => {
         file: 'src/pages/register.astro',
         id: 'register-error',
       },
+      {
+        file: 'src/pages/auth/forgot-password.astro',
+        id: 'forgot-password-error',
+        successURL: '/auth/forgot-password?sent=1',
+      },
+      {
+        file: 'src/pages/auth/reset-password.astro',
+        id: 'reset-password-error',
+        successURL: '/login?passwordReset=1',
+      },
+      {
+        file: 'src/pages/auth/verify-email.astro',
+        id: 'verify-email-error',
+        successURL: '/auth/check-email',
+      },
     ];
 
     for (const contract of formContracts) {
@@ -171,12 +188,55 @@ describe('minimal auth UI contract', () => {
       expect(source).toContain(`data-auth-error="${contract.id}"`);
       expect(source).toContain(`id="${contract.id}"`);
       expect(source).toContain('aria-live="polite"');
-      expect(source).toContain(
-        "import { mountAuthForms } from '@vergekit/core/auth'",
-      );
-      expect(source).toContain('authConfig');
-      expect(source).toContain('appConfig.defaultAuthenticatedPath');
+      if (contract.successURL) {
+        expect(source).toContain(
+          `data-auth-success-url="${contract.successURL}"`,
+        );
+      }
     }
+
+    const authShellSource = readProjectFile(
+      'src/components/auth/AuthShell.astro',
+    );
+    expect(authShellSource).toContain(
+      "import { mountAuthForms } from '@vergekit/core/auth'",
+    );
+    expect(authShellSource).toContain('authConfig');
+    expect(authShellSource).toContain('appConfig.defaultAuthenticatedPath');
+  });
+
+  it('renders non-enumerating password recovery success states', () => {
+    const forgotPasswordSource = readProjectFile(
+      'src/pages/auth/forgot-password.astro',
+    );
+    const loginSource = readProjectFile('src/pages/login.astro');
+
+    expect(forgotPasswordSource).toContain(
+      "Astro.url.searchParams.get('sent') === '1'",
+    );
+    expect(forgotPasswordSource).toContain(
+      'If an account exists for that address',
+    );
+    expect(loginSource).toContain(
+      "Astro.url.searchParams.get('passwordReset') === '1'",
+    );
+    expect(loginSource).toContain('Your password has been updated.');
+  });
+
+  it('routes registration through the email-verification gate', () => {
+    const registerSource = readProjectFile('src/pages/register.astro');
+    const checkEmailSource = readProjectFile(
+      'src/pages/auth/check-email.astro',
+    );
+
+    expect(registerSource).toContain(
+      'data-auth-success-url="/auth/check-email"',
+    );
+    expect(registerSource).toContain(
+      'value={appConfig.defaultAuthenticatedPath}',
+    );
+    expect(checkEmailSource).toContain('Check your inbox');
+    expect(checkEmailSource).toContain('href="/auth/verify-email"');
   });
 
   it('renders the dashboard from auth locals with a server-first sign out form', () => {

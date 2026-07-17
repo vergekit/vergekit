@@ -4,12 +4,12 @@ import { jsonSuccess } from '@vergekit/core/http';
 
 
 // import { jsonFailure } from '@vergekit/core/http';
-// import { env } from 'cloudflare:workers';
 // import { sendEmail } from '@vergekit/core/email';
 // import { render } from 'react-email';
 // import * as React from 'react';
 // import { appConfig } from '@/config/app';
 // import DemoEmail from '@/email/demo';
+// import { runtimeEnv } from '@/runtime';
 
 // const debugRecipient = 'me@example.com';
 // const debugFrom = { email: 'noreply@resend.example.net', name: appConfig.name };
@@ -19,11 +19,11 @@ import { jsonSuccess } from '@vergekit/core/http';
 //   const component = React.createElement(DemoEmail, {
 //     appName: appConfig.name,
 //     recipient: debugRecipient,
-//     provider: env.EMAIL_PROVIDER || 'unknown',
+//     provider: runtimeEnv.EMAIL_PROVIDER || 'unknown',
 //   });
 
 //   try {
-//     const result = await sendEmail(env, {
+//     const result = await sendEmail(runtimeEnv, {
 //       to: debugRecipient,
 //       from: debugFrom,
 //       subject,

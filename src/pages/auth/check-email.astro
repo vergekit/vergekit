@@ -1,0 +1,44 @@
+---
+import AuthShell from '@/components/auth/AuthShell.astro';
+import { MailCheckIcon, RotateCwIcon } from '@lucide/astro';
+import { Button } from '@/components/ui/button';
+---
+
+<AuthShell
+  title="Check your email"
+  eyebrow="One more step"
+  description="Verify your email address before signing in."
+>
+  <div class="text-center">
+    <div
+      class="mx-auto flex size-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"
+    >
+      <MailCheckIcon aria-hidden="true" />
+    </div>
+
+    <h2 class="mt-6 text-2xl font-semibold tracking-normal text-slate-950">
+      Check your inbox
+    </h2>
+    <p class="mt-3 text-sm leading-6 text-slate-600">
+      We sent a verification link to the email address you registered. Open it
+      to verify your account and finish signing in.
+    </p>
+
+    <Button
+      as="a"
+      href="/auth/verify-email"
+      variant="outline"
+      class="mt-8 w-full"
+    >
+      <RotateCwIcon aria-hidden="true" />
+      Resend verification email
+    </Button>
+  </div>
+
+  <p class="mt-6 text-center text-sm text-slate-600">
+    Already verified? &nbsp;
+    <a href="/login" class="text-slate-600 underline hover:opacity-75">
+      Sign in
+    </a>
+  </p>
+</AuthShell>

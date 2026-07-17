@@ -27,6 +27,7 @@ import { Input } from '@/components/ui/input';
     class="space-y-5"
     data-auth-form
     data-auth-error="register-error"
+    data-auth-success-url="/auth/check-email"
   >
     <input
       type="hidden"
@@ -89,14 +90,4 @@ import { Input } from '@/components/ui/input';
     </a>
   </p>
 
-  <script>
-    import { mountAuthForms } from '@vergekit/core/auth';
-    import { appConfig } from '@/config/app';
-    import { authConfig } from '@/config/auth';
-
-    mountAuthForms(document, {
-      authConfig,
-      defaultSuccessRedirect: appConfig.defaultAuthenticatedPath,
-    });
-  </script>
 </AuthShell>

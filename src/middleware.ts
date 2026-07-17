@@ -1,17 +1,20 @@
-import { env } from 'cloudflare:workers';
 import { defineMiddleware } from 'astro:middleware';
 import { createAuthFromEnv, resolveRouteAccess } from '@vergekit/core/auth';
 import { authConfig } from '@/config/auth';
 import * as schema from '@/config/schema';
-import { db } from '@/db';
+import { authDatabaseProvider, db } from '@/db';
+import { runtimeEnv } from '@/runtime';
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const auth = createAuthFromEnv({
-    runtimeEnv: env,
+    runtimeEnv,
     request: context.request,
     database: db,
     schema,
     authConfig,
+    drizzle: {
+      provider: authDatabaseProvider,
+    },
   });
   const session = await auth.api.getSession({
     headers: context.request.headers,
