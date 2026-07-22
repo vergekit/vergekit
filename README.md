@@ -27,7 +27,7 @@ Start new apps with low effort and high confidence.
 
 ## The Boilerplate
 
-- Middleware that loads auth state into typed `Astro.locals`
+- Lazy auth middleware with typed, request-scoped `Astro.locals`
 - Public-by-default route authorization with opt-in protected pages and APIs
 - CSRF origin checks through [Astro config](https://docs.astro.build/en/guides/security/)
 - Custom 404 and 500 error pages
@@ -129,4 +129,3 @@ decisions consistent. Clear bug reports are welcome through the issue tracker.
 ## License
 
 Verge Kit is available under the [MIT License](https://opensource.org/license/mit).
-

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { createAuthFromEnvMock, getSessionMock } = vi.hoisted(() => {
+const { createAuthFromEnvMock, getSessionMock, runtimeEnvFixture } = vi.hoisted(() => {
   const getSession = vi.fn(async (): Promise<unknown> => null);
 
   return {
@@ -8,14 +8,20 @@ const { createAuthFromEnvMock, getSessionMock } = vi.hoisted(() => {
     createAuthFromEnvMock: vi.fn(() => ({
       api: { getSession },
     })),
+    runtimeEnvFixture: {
+      BETTER_AUTH_SECRET: 'test-secret-with-at-least-32-characters',
+      BETTER_AUTH_URL: 'https://vk.example.com',
+    },
   };
 });
 
-vi.mock('cloudflare:workers', () => ({
-  env: {
-    DB: {},
-    BETTER_AUTH_SECRET: 'test-secret-with-at-least-32-characters',
-  },
+vi.mock('@/db', () => ({
+  authDatabaseProvider: 'sqlite',
+  db: {},
+}));
+
+vi.mock('@/runtime', () => ({
+  runtimeEnv: runtimeEnvFixture,
 }));
 
 vi.mock('@vergekit/core/auth', async () => {

@@ -4,7 +4,7 @@ export default defineConfig({
   dialect: 'sqlite',
   driver: 'd1-http',
   schema: './src/config/schema.ts',
-  out: './drizzle/d1',
+  out: './migrations',
   dbCredentials: {
     accountId: process.env.CLOUDFLARE_ACCOUNT_ID ?? 'local',
     databaseId: process.env.CLOUDFLARE_DATABASE_ID ?? 'local',

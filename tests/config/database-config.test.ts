@@ -34,7 +34,7 @@ describe('database config', () => {
 
   it('does not ship app settings proof tables or database target placeholders', () => {
     const migration = readFileSync(
-      new URL('drizzle/d1/0000_vk_init.sql', projectRoot),
+      new URL('migrations/0000_vk_init.sql', projectRoot),
       'utf8',
     );
 

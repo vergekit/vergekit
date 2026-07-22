@@ -1,14 +1,14 @@
 # Route Authentication
 
-VK loads auth state for every request, but routes are public by default. The
-middleware in `src/middleware.ts` creates Better Auth through
-`@vergekit/core/auth`, writes `Astro.locals.user`, `Astro.locals.session`, and
-`Astro.locals.isAuthenticated`, then evaluates the current URL against
-`authConfig` from `src/config/auth.ts`.
+VK initializes every request with anonymous auth locals, but routes are public
+by default. The middleware in `src/middleware.ts` evaluates the current URL
+against `authConfig` from `src/config/auth.ts` before it creates Better Auth or
+loads a session.
 
 Use `src/config/auth.ts` for route rules that should be enforced consistently by
 middleware. Use a route-local check when the rule is specific to one page or API
-handler.
+handler. Public route-local checks must call `Astro.locals.loadAuthSession()`
+before reading the authenticated user or session.
 
 The boilerplate also ships with app roles powered by the Better Auth admin
 plugin: `admin`, `moderator`, `user`, and `banned`. Admin URL routes are
@@ -62,6 +62,43 @@ resolution.
 The app still owns the database, schema, and email renderers. `src/middleware.ts`
 and `src/pages/api/auth/[...all].ts` pass those app-owned pieces into the core
 helpers.
+
+## Lazy Session Loading
+
+Every request begins with these typed values:
+
+- `Astro.locals.user = null`
+- `Astro.locals.session = null`
+- `Astro.locals.isAuthenticated = false`
+- `Astro.locals.loadAuthSession()` as a request-scoped, memoized loader
+
+Middleware then follows a path-first policy:
+
+- `/api/auth/*` bypasses global session loading because the Better Auth handler
+  owns those requests.
+- Protected and admin routes without a candidate session cookie redirect to
+  login without initializing Better Auth.
+- Protected and admin routes with a candidate cookie call `getSession()` and
+  enforce access from the validated result. Cookie presence never authorizes a
+  request by itself.
+- Public routes skip session loading, even when a cookie is present, unless the
+  route is explicitly auth-aware or its handler calls `loadAuthSession()`.
+
+The loader updates all three auth values and returns the validated session. Its
+promise is memoized, so middleware and route code share at most one session
+lookup per request.
+
+The homepage is the default explicitly auth-aware public route because it
+renders different controls for authenticated users. Keep this list small:
+
+```ts
+const authAwarePublicPaths = new Set(['/']);
+```
+
+Public pages that do not vary by user remain independent of auth state and are
+better candidates for shared caching. Admin routes always request an
+authoritative session lookup, which also keeps them independent of any optional
+cookie cache added later.
 
 ## Adding Better Auth Plugins
 
@@ -123,7 +160,7 @@ export const authClient = createAuthClient({
 For plugins such as Better Auth's organization plugin, also check the rest of
 the integration surface:
 
-- `src/config/schema.ts` and `drizzle/d1/*` migrations for plugin-required
+- `src/config/schema.ts` and `migrations/*` for plugin-required migrations
   tables or columns.
 - `src/env.d.ts` when the plugin changes the session or user fields exposed on
   `Astro.locals`.
@@ -219,14 +256,17 @@ export const authConfig = defineAuthConfig({
 ## Route-Local Checks
 
 Per-route auth is useful when a route needs custom behavior, conditional access,
-or a JSON `401` response instead of a middleware login redirect. Middleware still
-populates `locals`, so the route can decide for itself.
+or a JSON `401` response instead of a middleware login redirect. All requests
+receive anonymous defaults and the memoized loader; protected routes are already
+hydrated, while public route-local checks must load auth explicitly.
 
 For a page, redirect from the page frontmatter:
 
 ```astro
 ---
 const destination = `${Astro.url.pathname}${Astro.url.search}`;
+
+await Astro.locals.loadAuthSession();
 
 if (!Astro.locals.isAuthenticated) {
   return Astro.redirect(
@@ -243,6 +283,8 @@ import type { APIRoute } from 'astro';
 import { jsonFailure, jsonSuccess } from '@vergekit/core/http';
 
 export const POST: APIRoute = async ({ locals }) => {
+  await locals.loadAuthSession();
+
   if (!locals.isAuthenticated) {
     return jsonFailure('Unauthorized', { status: 401 });
   }
@@ -264,6 +306,7 @@ Use `protectedPrefixes` for URL namespaces like `/settings/` or
 
 Use route-local checks when the response should be custom, especially for API
 routes that should return `401` JSON instead of redirecting to the login page.
+Call `loadAuthSession()` before checking auth on a public route.
 
 Use `userHasAppPermission` from `@vergekit/core/auth` for local role checks:
 
@@ -288,5 +331,6 @@ When changing middleware-protected route policy, update the route-policy tests:
 npm run test -- tests/auth tests/middleware
 ```
 
-When adding route-local auth, test the route handler directly and pass the
-expected `locals.isAuthenticated` value in the route context.
+When adding route-local auth, test the route handler directly and provide a
+`locals.loadAuthSession` test implementation that hydrates the expected auth
+state.
