@@ -21,5 +21,9 @@ declare namespace App {
     user: import('@vergekit/core/auth').AppAuthUser | null;
     session: import('@vergekit/core/auth').AppAuthSession | null;
     isAuthenticated: boolean;
+    loadAuthSession: () => Promise<{
+      user: import('@vergekit/core/auth').AppAuthUser;
+      session: import('@vergekit/core/auth').AppAuthSession;
+    } | null>;
   }
 }

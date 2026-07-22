@@ -35,7 +35,9 @@ import { runtimeEnv } from '@/runtime';
 
 describe('shared auth runtime seam', () => {
   it('passes the runtime environment and database provider from middleware', async () => {
-    const request = new Request('https://vk.example.com/dashboard');
+    const request = new Request('https://vk.example.com/dashboard', {
+      headers: { cookie: 'better-auth.session_token=candidate' },
+    });
     const context = {
       request,
       locals: {
