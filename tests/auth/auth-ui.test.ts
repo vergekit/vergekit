@@ -20,6 +20,7 @@ describe('minimal auth UI contract', () => {
     'src/components/ui/separator/Separator.astro',
     'src/lib/utils.ts',
     'src/components/auth/AuthShell.astro',
+    'src/layouts/AuthenticatedLayout.astro',
     'src/pages/login.astro',
     'src/pages/register.astro',
     'src/pages/auth/check-email.astro',
@@ -56,7 +57,7 @@ describe('minimal auth UI contract', () => {
 
     const buttonPages = [
       'src/pages/index.astro',
-      'src/pages/dashboard.astro',
+      'src/layouts/AuthenticatedLayout.astro',
       'src/pages/login.astro',
       'src/pages/register.astro',
       'src/pages/auth/check-email.astro',
@@ -211,14 +212,14 @@ describe('minimal auth UI contract', () => {
     );
     const loginSource = readProjectFile('src/pages/login.astro');
 
-    expect(forgotPasswordSource).toContain(
-      "Astro.url.searchParams.get('sent') === '1'",
+    expect(forgotPasswordSource).toMatch(
+      /Astro\.url\.searchParams\.get\(["']sent["']\) === ["']1["']/,
     );
     expect(forgotPasswordSource).toContain(
       'If an account exists for that address',
     );
-    expect(loginSource).toContain(
-      "Astro.url.searchParams.get('passwordReset') === '1'",
+    expect(loginSource).toMatch(
+      /Astro\.url\.searchParams\.get\(["']passwordReset["']\) === ["']1["']/,
     );
     expect(loginSource).toContain('Your password has been updated.');
   });
@@ -240,14 +241,20 @@ describe('minimal auth UI contract', () => {
   });
 
   it('renders the dashboard from auth locals with a server-first sign out form', () => {
-    const source = readProjectFile('src/pages/dashboard.astro');
+    const dashboardSource = readProjectFile('src/pages/dashboard.astro');
+    const layoutSource = readProjectFile(
+      'src/layouts/AuthenticatedLayout.astro',
+    );
 
-    expect(source).toContain('Astro.locals.user');
-    expect(source).toContain('Astro.locals.session');
-    expect(source).toContain('action="/api/auth/sign-out"');
-    expect(source).toContain('method="post"');
-    expect(source).toContain('name="redirectTo"');
-    expect(source).toContain('value={appConfig.homePath}');
+    expect(dashboardSource).toContain('Astro.locals.user');
+    expect(dashboardSource).toContain('Astro.locals.session');
+    expect(dashboardSource).toContain(
+      '@/layouts/AuthenticatedLayout.astro',
+    );
+    expect(layoutSource).toContain('action="/api/auth/sign-out"');
+    expect(layoutSource).toContain('method="post"');
+    expect(layoutSource).toContain('name="redirectTo"');
+    expect(layoutSource).toContain('value={appConfig.homePath}');
   });
 
   it('provides standalone error pages for missing routes and server failures', () => {

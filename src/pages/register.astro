@@ -1,25 +1,25 @@
 ---
-import AuthShell from '@/components/auth/AuthShell.astro';
-import { UserPlusIcon } from '@lucide/astro';
-import { Field, FieldLabel } from '@/components/ui/field';
-import { appConfig } from '@/config/app';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import AuthShell from "@/components/auth/AuthShell.astro";
+import { UserPlusIcon } from "@lucide/astro";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { appConfig } from "@/config/app";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 ---
 
 <AuthShell
-  title="Create your account"
-  eyebrow="Start secure"
-  description="Create a secure workspace account."
+  title={`Welcome to ${appConfig.name}`}
+  eyebrow="Account Registration"
+  description="Create a new account to get started"
 >
-  <div class="mb-8 hidden lg:block">
+  <!-- <div class="mb-8 hidden lg:block">
     <h2 class="text-2xl font-semibold tracking-normal text-slate-950">
       Register
     </h2>
     <p class="mt-2 text-sm leading-6 text-slate-600">
       Set up your profile with email and password credentials.
     </p>
-  </div>
+  </div> -->
 
   <form
     method="post"
@@ -46,12 +46,7 @@ import { Input } from '@/components/ui/input';
 
     <Field>
       <FieldLabel for="register-name">Name</FieldLabel>
-      <Input
-        id="register-name"
-        name="name"
-        autocomplete="name"
-        required
-      />
+      <Input id="register-name" name="name" autocomplete="name" required />
     </Field>
 
     <Field>
@@ -77,7 +72,7 @@ import { Input } from '@/components/ui/input';
       />
     </Field>
 
-    <Button type="submit" class="w-full">
+    <Button type="submit" class="w-full mt-3">
       <UserPlusIcon aria-hidden="true" />
       Create account
     </Button>
@@ -89,5 +84,4 @@ import { Input } from '@/components/ui/input';
       Sign in
     </a>
   </p>
-
 </AuthShell>

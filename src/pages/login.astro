@@ -1,5 +1,6 @@
 ---
 import AuthShell from '@/components/auth/AuthShell.astro';
+import { LogInIcon } from '@lucide/astro';
 import { Field, FieldLabel } from '@/components/ui/field';
 import { appConfig } from '@/config/app';
 import { Button } from '@/components/ui/button';
@@ -12,18 +13,18 @@ const passwordReset = Astro.url.searchParams.get('passwordReset') === '1';
 ---
 
 <AuthShell
-  title={`Sign in to ${appConfig.name}`}
+  title={`Sign in`}
   eyebrow="Welcome back"
-  description="Secure access for your workspace."
+  description="Secure access for your workspace"
 >
-  <div class="mb-8 hidden lg:block">
+  <!-- <div class="mb-8 hidden lg:block">
     <h2 class="text-2xl font-semibold tracking-normal text-slate-950">
       Sign in
     </h2>
     <p class="mt-2 text-sm leading-6 text-slate-600">
       Continue with your account credentials.
     </p>
-  </div>
+  </div> -->
 
   <form
     method="post"
@@ -97,6 +98,7 @@ const passwordReset = Astro.url.searchParams.get('passwordReset') === '1';
     </div>
 
     <Button type="submit" class="w-full">
+      <LogInIcon aria-hidden="true" />
       Sign in
     </Button>
   </form>

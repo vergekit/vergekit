@@ -1,0 +1,41 @@
+---
+import { Button } from "@/components/ui/button";
+import { LogOutIcon } from "@lucide/astro";
+import { appConfig } from "@/config/app";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title?: string;
+}
+
+const { title = appConfig.name } = Astro.props;
+---
+<BaseLayout title={title}>
+<main class="min-h-screen bg-slate-50 text-slate-950">
+  <header class="border-b border-slate-200 bg-white">
+    <div
+      class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8"
+    >
+      <a href="/" class="inline-flex items-center gap-3 font-semibold">
+        <img src="/favicon.svg" alt={appConfig.name} class="h-6" />
+        <span>{appConfig.name}</span>
+      </a>
+
+      <form method="post" action="/api/auth/sign-out">
+        <input type="hidden" name="redirectTo" value={appConfig.homePath} />
+        <Button
+          type="submit"
+          variant="outline"
+          size="sm"
+          class="cursor-pointer"
+        >
+          <LogOutIcon aria-hidden="true" />
+          Sign out
+        </Button>
+      </form>
+    </div>
+  </header>
+
+  <slot />
+</main>
+</BaseLayout>
