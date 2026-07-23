@@ -1,4 +1,5 @@
 ---
+import Favicon from '@/components/Favicon.astro';
 import { appConfig } from '@/config/app';
 import '../styles/global.css';
 
@@ -15,6 +16,7 @@ const { title = appConfig.name } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <Favicon />
     <title>{title}</title>
   </head>
   <body>
