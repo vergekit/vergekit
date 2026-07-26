@@ -21,13 +21,13 @@
     "verify": "npm run check && npm run lint && npm run test && npm run build"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^14.1.3",
+    "@astrojs/cloudflare": "^14.1.4",
     "@lucide/astro": "^1.24.0",
     "@tailwindcss/vite": "^4.3.1",
-    "@vergekit/core": "^0.0.3",
+    "@vergekit/core": "^0.0.4",
     "astro": "^7.1.1",
     "astro-favicons": "3.1.6",
-    "better-auth": "^1.6.19",
+    "better-auth": "^1.6.25",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@cloudflare/workers-types": "^4.20260619.1",
+    "@cloudflare/workers-types": "^5.20260726.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "bejamas": "^0.4.0",
@@ -53,10 +53,16 @@
     "typescript": "^6.0.3",
     "vite": "^8.1.0",
     "vitest": "^4.1.9",
-    "wrangler": "^4.103.0"
+    "wrangler": "^4.114.0"
   },
   "overrides": {
     "@astrojs/language-server": "2.16.12",
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.12"
+    },
+    "@modelcontextprotocol/sdk": {
+      "@hono/node-server": "2.0.11"
+    },
     "favilib": {
       "sharp": "0.35.3"
     }
@@ -69,6 +75,7 @@
     "msw": false,
     "sharp@0.34.5": true,
     "sharp@0.35.3": true,
-    "workerd@1.20260617.1": true
+    "workerd@1.20260617.1": true,
+    "workerd@1.20260722.1": true
   }
 }
