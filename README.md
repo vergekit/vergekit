@@ -14,7 +14,7 @@ Start new apps with low effort and high confidence.
 - [Astro](https://astro.build) - SSR with strict
   [TypeScript](https://www.typescriptlang.org) and [Cloudflare Workers](https://workers.dev) adapter
 - [Cloudflare D1](https://developers.cloudflare.com/d1/) - SQLite databsae
-- [Drizzle](https://orm.drizzle.team) - ORM, schema, migrations
+- [Drizzle](https://orm.drizzle.team) - ORM, schema, migrations (w/ [Drizzle Kit](https://orm.drizzle.team/docs/kit-overview))
 - [Better Auth](https://www.better-auth.com) w/ [admin plugin](https://www.better-auth.com/docs/plugins/admin)
 - [Tailwind](https://tailwindcss.com) - CSS utility classes
 - [bejamas/ui](https://ui.bejamas.com) components (based on [shadcn/ui](https://ui.shadcn.com/))
