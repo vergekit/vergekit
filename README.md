@@ -13,14 +13,17 @@ Start new apps with low effort and high confidence.
 
 - [Astro](https://astro.build) - SSR with strict
   [TypeScript](https://www.typescriptlang.org) and [Cloudflare Workers](https://workers.dev) adapter
-- [Cloudflare D1](https://developers.cloudflare.com/d1/) - SQLite databsae
+- [Cloudflare D1](https://developers.cloudflare.com/d1/) - SQLite database
 - [Drizzle](https://orm.drizzle.team) - ORM, schema, migrations (w/ [Drizzle Kit](https://orm.drizzle.team/docs/kit-overview))
 - [Better Auth](https://www.better-auth.com) w/ [admin plugin](https://www.better-auth.com/docs/plugins/admin)
 - [Tailwind](https://tailwindcss.com) - CSS utility classes
 - [bejamas/ui](https://ui.bejamas.com) components (based on [shadcn/ui](https://ui.shadcn.com/))
-- [Lucide Astro](https://lucide.dev/guide/astro) icons
+- [Lucide Astro](https://lucide.dev/) icons
+- [astro-favicons](https://github.com/ACP-CODE/astro-favicons) - simplified favicon generation
 - [React Email](https://react.email/) components and templates
-- [Vitest](https://vitest.dev), [happy-dom](https://github.com/capricorn86/happy-dom), and [oxlint](https://oxc.rs/docs/guide/usage/linter.html), and integrated npm verification scripts
+- [VK Core](https://github.com/vergekit/core) utilites & runtime helpers
+- [Zod](https://zod.dev/) schema validation
+- [Vitest](https://vitest.dev), [happy-dom](https://github.com/capricorn86/happy-dom), [oxlint](https://oxc.rs/docs/guide/usage/linter.html), and integrated npm verification scripts
 
 
 
