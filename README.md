@@ -18,7 +18,7 @@ Start new apps with low effort and high confidence.
 - [Better Auth](https://www.better-auth.com) w/ [admin plugin](https://www.better-auth.com/docs/plugins/admin)
 - [Tailwind](https://tailwindcss.com) - CSS utility classes
 - [bejamas/ui](https://ui.bejamas.com) components (based on [shadcn/ui](https://ui.shadcn.com/))
-- [Lucide](https://lucide.dev/) icons
+- [Lucide](https://lucide.dev/icons/) icons
 - [astro-favicons](https://github.com/ACP-CODE/astro-favicons) - simplified favicon generation
 - [React Email](https://react.email/) components and templates
 - [VK Core](https://github.com/vergekit/core) utilites & runtime helpers
