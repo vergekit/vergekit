@@ -18,7 +18,7 @@ Start new apps with low effort and high confidence.
 - [Better Auth](https://www.better-auth.com) w/ [admin plugin](https://www.better-auth.com/docs/plugins/admin)
 - [Tailwind](https://tailwindcss.com) - CSS utility classes
 - [bejamas/ui](https://ui.bejamas.com) components (based on [shadcn/ui](https://ui.shadcn.com/))
-- [Lucide Astro](https://lucide.dev/) icons
+- [Lucide](https://lucide.dev/) icons
 - [astro-favicons](https://github.com/ACP-CODE/astro-favicons) - simplified favicon generation
 - [React Email](https://react.email/) components and templates
 - [VK Core](https://github.com/vergekit/core) utilites & runtime helpers
@@ -31,11 +31,11 @@ Start new apps with low effort and high confidence.
 ## The Boilerplate
 
 - Lazy auth middleware with typed, request-scoped `Astro.locals`
+- Basic authentication flows with requisite email notifications
 - Public-by-default route authorization with opt-in protected pages and APIs
 - CSRF origin checks through [Astro config](https://docs.astro.build/en/guides/security/)
 - Custom 404 and 500 error pages
-- D1-backed Drizzle schema, migrations, and typed database client
-- Basic authentication flows (register, login, logout, email verification, forgot password, and reset password) with requisite email notifications
+- Drizzle schema, migrations, and typed database client for the default D1 preset
 - Configurable user roles and permissions for `admin`, `moderator`, `user`, and `banned`
 - Transactional email providers for console output,
   [Resend](https://resend.com), [Mailgun](https://www.mailgun.com),
