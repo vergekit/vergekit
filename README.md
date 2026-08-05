@@ -1,3 +1,5 @@
+![Verge Kit logo](https://raw.githubusercontent.com/vergekit/vergekit/refs/heads/main/public/favicon.svg)
+
 # Verge Kit
 
 
