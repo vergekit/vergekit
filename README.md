@@ -48,40 +48,12 @@ Start new apps with low effort and high confidence.
 
 Install the latest version:
 ```bash
-npm create vergekit@latest my-app
+npm create vergekit@latest
 ```
 
-Install dependencies:
+See [the docs](https://vergekit.com/installation/) for manual installation instructions.
 
-```bash
-cd my-app
-npm install
-```
-
-Create local runtime secrets. For first-time setup, this copies the template and
-writes a fresh Better Auth secret:
-
-```bash
-cp .dev.vars.example .dev.vars && secret="$(openssl rand -base64 32)" && awk -v secret="$secret" 'BEGIN { done = 0 } /^BETTER_AUTH_SECRET=/ { print "BETTER_AUTH_SECRET=" secret; done = 1; next } { print } END { if (!done) print "BETTER_AUTH_SECRET=" secret }' .dev.vars > .dev.vars.tmp && mv .dev.vars.tmp .dev.vars
-```
-
-See [the docs](https://vergekit.com/docs/installation/) for manual installation instructions.
-
-Apply local D1 migrations:
-
-```bash
-npm run db:migrate:local
-```
-
-Inspect the local database with `npm run db:studio`.
-
-Optionally create a verified local user with the `admin` role:
-
-```bash
-npm run init:admin
-```
-
-Configure the email provider by adding a shared non-secret provider configuration in `wrangler.jsonc`:
+For local auth flows with real email delivery, configure the email provider by adding a shared non-secret provider configuration in `wrangler.jsonc`:
 
 ```jsonc
 {
@@ -92,7 +64,7 @@ Configure the email provider by adding a shared non-secret provider configuratio
 }
 ```
 
-For local auth flows with real email delivery, put local provider secrets in `.dev.vars`:
+and put local provider secrets in `.dev.vars`:
 
 ```bash
 RESEND_API_KEY=your-api-key
@@ -106,13 +78,6 @@ npm run dev
 
 
 
-
-## Documentation
-
-Setup and operational guides are available in [`docs/setup`](docs/setup),
-including [configuration](docs/setup/configuration.md), D1, authentication
-routes, email, and deployment. The
-hosted documentation is available at [vergekit.com/docs](https://vergekit.com/docs/).
 
 ## Support
 
