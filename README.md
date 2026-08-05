@@ -7,7 +7,7 @@
 
 It's a pre-wired stack of dependencies and minimal boilerplate designed to help LLMs produce reliable and understandable applications.
 
-Start new apps with low effort and high confidence.
+***Start new apps with low effort and high confidence!***
 
 
 
