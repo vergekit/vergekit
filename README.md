@@ -1,4 +1,4 @@
-![Verge Kit logo](https://raw.githubusercontent.com/vergekit/vergekit/refs/heads/main/public/favicon.svg)
+<img src="https://raw.githubusercontent.com/vergekit/vergekit/refs/heads/main/public/favicon.svg" alt="Verge Kit logo" width="96">
 
 # Verge Kit
 
