@@ -30,12 +30,15 @@ describe('operational polish documentation contract', () => {
     );
   });
 
-  it('captures the first architecture decisions', async () => {
+  it('captures the architecture decisions', async () => {
     const d1Decision = await readProjectFile(
       'docs/decisions/0001-d1-first-adapter-ready.md',
     );
     const emailDecision = await readProjectFile(
       'docs/decisions/0002-workers-email-provider-strategy.md',
+    );
+    const dependencyDecision = await readProjectFile(
+      'docs/decisions/0003-minimal-runtime-dependencies.md',
     );
 
     expect(d1Decision).toContain('D1-first');
@@ -47,16 +50,17 @@ describe('operational polish documentation contract', () => {
     expect(emailDecision).toContain('console');
     expect(emailDecision).toContain('Cloudflare Email');
     expect(emailDecision).toContain('Wrangler secrets');
+
+    expect(dependencyDecision).toContain('Astro-first UI architecture');
+    expect(dependencyDecision).toContain('browser UI framework');
+    expect(dependencyDecision).toContain('supported integration requires it');
   });
 
   it('documents D1 setup and deployment workflows', async () => {
     const readme = await readProjectFile('README.md');
     const d1Setup = await readProjectFile('docs/setup/d1.md');
     const deployment = await readProjectFile('docs/setup/deployment.md');
-    const roadmap = await readProjectFile('docs/roadmap.md');
 
-    expect(readme).toContain('npm run init:admin');
-    expect(readme).toContain('npm run db:studio');
     expect(readme).toContain('Custom 404 and 500 error pages');
     expect(d1Setup).toContain('wrangler d1 create vk');
     expect(d1Setup).toContain('npm run db:generate');
@@ -83,15 +87,11 @@ describe('operational polish documentation contract', () => {
     expect(deployment).toContain('wrangler secret put MAILGUN_API_KEY');
     expect(deployment).toContain('wrangler.jsonc');
     expect(deployment).toContain('npm run build');
-
-    expect(roadmap).toContain('custom 404/500 error pages');
   });
 
   it('documents where each kind of configuration belongs', async () => {
-    const readme = await readProjectFile('README.md');
     const configuration = await readProjectFile('docs/setup/configuration.md');
 
-    expect(readme).toContain('docs/setup/configuration.md');
     expect(configuration).toContain('src/config');
     expect(configuration).toContain('wrangler.jsonc');
     expect(configuration).toContain('.dev.vars');

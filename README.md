@@ -55,22 +55,7 @@ npm create vergekit@latest
 
 See [the docs](https://vergekit.com/installation/) for manual installation instructions.
 
-For local auth flows with real email delivery, configure the email provider by adding a shared non-secret provider configuration in `wrangler.jsonc`:
-
-```jsonc
-{
-  "vars": {
-    "EMAIL_PROVIDER": "resend",
-    "EMAIL_FROM": "VK <noreply@example.com>",
-  },
-}
-```
-
-and put local provider secrets in `.dev.vars`:
-
-```bash
-RESEND_API_KEY=your-api-key
-```
+To send real email in local auth flows, [configure an email provider](https://vergekit.com/email/#configure-a-provider).
 
 Start the app:
 ```bash
@@ -79,22 +64,21 @@ npm run dev
 
 
 
+## Documentation
+
+Read the [official Verge Kit documentation](https://vergekit.com/) for setup guides and detailed technical reference. It covers configuration, authentication, and deployment, plus helpful guides for the tools and workflows used throughout a project.
 
 
 ## Support
 
-Verge Kit is maintained as a technical starting point rather than a managed
-application support service. If you find a reproducible defect in the
-boilerplate, please [open an issue](https://github.com/vergekit/vergekit/issues)
-with the Verge Kit version, runtime environment, reproduction steps, and the
-expected and actual behavior. Debugging application-specific changes and
-providing implementation consulting are outside the project's support scope.
+Verge Kit is provided as a technical starting point. We do not debug application-specific changes or provide implementation consulting.
+
+If you find a repeatable defect in the boilerplate, please [open an issue](https://github.com/vergekit/vergekit/issues). Be sure to include the boilerplate version, runtime environment, reproduction steps, expected behavior, and actual behavior.
+
 
 ## Contributing
 
-The project is not currently accepting external feature contributions or pull
-requests. This keeps the reference stack focused and its implementation
-decisions consistent. Clear bug reports are welcome through the issue tracker.
+This project does not currently accept external feature contributions or pull requests. We prefer to keep the reference stack focused and implementation decisions consistent. Bug reports are welcome through the [issue tracker](https://github.com/vergekit/vergekit/issues).
 
 ## License
 
