@@ -82,4 +82,4 @@ This project does not currently accept external feature contributions or pull re
 
 ## License
 
-Verge Kit is available under the [MIT License](https://opensource.org/license/mit).
+Verge Kit is available under the [MIT License](./LICENSE).
