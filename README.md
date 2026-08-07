@@ -78,7 +78,7 @@ If you find a repeatable defect in the boilerplate, please [open an issue](https
 
 ## Contributing
 
-This project does not currently accept external feature contributions or pull requests. We prefer to keep the reference stack focused and implementation decisions consistent. Bug reports are welcome through the [issue tracker](https://github.com/vergekit/vergekit/issues).
+In order to keep the stack focused and implementation decisisions consistent, this project does not currently accept external feature contributions or pull requests. Please contact [jonathan.youngblood@gmail.com](mailto:jonathan.youngblood@gmail.com) if you're interested in helping shape the future of Verge Kit.
 
 ## License
 
