@@ -1,3 +1,6 @@
+/** @jsxRuntime automatic */
+/** @jsxImportSource react */
+
 import {
   Body,
   Container,

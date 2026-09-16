@@ -36,6 +36,10 @@ export default defineConfig({
     checkOrigin: true,
   },
   vite: {
+    // Compile React Email TSX while keeping Astro's TypeScript JSX defaults.
+    oxc: {
+      jsx: { runtime: 'automatic', importSource: 'react' },
+    },
     plugins: [tailwindcss()],
   },
 });

@@ -3,11 +3,8 @@
   "include": [".astro/types.d.ts", "src/env.d.ts", "**/*"],
   "exclude": ["dist", ".wrangler"],
   "compilerOptions": {
-    "baseUrl": ".",
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "verbatimModuleSyntax": true
   }

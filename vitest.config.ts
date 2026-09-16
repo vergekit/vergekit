@@ -6,6 +6,9 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 
 const astroViteConfig = getViteConfig(
   {
+    oxc: {
+      jsx: { runtime: 'automatic', importSource: 'react' },
+    },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
