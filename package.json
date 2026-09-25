@@ -64,7 +64,7 @@
       "@hono/node-server": "2.0.11"
     },
     "favilib": {
-      "sharp": "0.35.3"
+      "sharp": "^0.35.4"
     }
   },
   "allowScripts": {
@@ -74,7 +74,7 @@
     "fsevents": false,
     "msw": false,
     "sharp@0.34.5": true,
-    "sharp@0.35.3": true,
+    "sharp@0.35.4": true,
     "workerd@1.20260617.1": true,
     "workerd@1.20260722.1": true
   }
