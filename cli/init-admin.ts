@@ -254,7 +254,7 @@ async function questionHidden(query: string) {
     };
 
     const onData = (data: Buffer) => {
-      for (const character of data.toString('utf8')) {
+      for (const character of data.toString()) {
         const next = applyMaskedPasswordCharacter(value, character);
 
         if (next.output) {
