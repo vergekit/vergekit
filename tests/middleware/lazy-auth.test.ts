@@ -87,7 +87,7 @@ describe('lazy auth middleware', () => {
   beforeEach(() => {
     createAuthFromEnvMock.mockClear();
     getSessionMock.mockReset();
-    getSessionMock.mockResolvedValue(null);
+    getSessionMock.mockResolvedValue({ response: null, headers: new Headers() });
   });
 
   it('keeps anonymous public requests entirely outside Better Auth', async () => {
@@ -158,7 +158,7 @@ describe('lazy auth middleware', () => {
   });
 
   it('validates protected routes and memoizes the result for route code', async () => {
-    getSessionMock.mockResolvedValue(validSession);
+    getSessionMock.mockResolvedValue({ response: validSession, headers: new Headers() });
     const { context, locals, next } = createRequestContext('/dashboard', true);
 
     await onRequest(context, next);
@@ -176,7 +176,7 @@ describe('lazy auth middleware', () => {
   });
 
   it('hydrates only explicitly auth-aware public pages', async () => {
-    getSessionMock.mockResolvedValue(validSession);
+    getSessionMock.mockResolvedValue({ response: validSession, headers: new Headers() });
     const { context, locals, next } = createRequestContext('/', true);
 
     await onRequest(context, next);
@@ -186,8 +186,41 @@ describe('lazy auth middleware', () => {
     expect(locals.isAuthenticated).toBe(true);
   });
 
+  it('forwards cookies when route code loads auth lazily and preserves route cookies', async () => {
+    const headers = new Headers();
+    headers.append('set-cookie', 'better-auth.session_token=renewed; Max-Age=31536000; HttpOnly');
+    headers.append('set-cookie', 'better-auth.session_data=cache; HttpOnly');
+    getSessionMock.mockResolvedValue({ response: validSession, headers });
+    const { context, locals, next } = createRequestContext('/about', true);
+    next.mockImplementation(async () => {
+      await locals.loadAuthSession();
+      return new Response('next', { headers: { 'set-cookie': 'preference=compact' } });
+    });
+
+    const response = await onRequest(context, next);
+
+    expect(response?.headers.getSetCookie()).toEqual([
+      'preference=compact',
+      ...headers.getSetCookie(),
+    ]);
+  });
+
+  it('forwards expired-cookie deletion on the login redirect', async () => {
+    const deletion = 'better-auth.session_token=; Max-Age=0; HttpOnly';
+    getSessionMock.mockResolvedValue({
+      response: null,
+      headers: new Headers({ 'set-cookie': deletion }),
+    });
+    const { context, next } = createRequestContext('/dashboard', true);
+
+    const response = await onRequest(context, next);
+
+    expect(response?.status).toBe(302);
+    expect(response?.headers.getSetCookie()).toEqual([deletion]);
+  });
+
   it('forces authoritative session checks for admin routes', async () => {
-    getSessionMock.mockResolvedValue(validSession);
+    getSessionMock.mockResolvedValue({ response: validSession, headers: new Headers() });
     const { context, next } = createRequestContext('/admin', true);
 
     const response = await onRequest(context, next);
@@ -202,6 +235,7 @@ describe('lazy auth middleware', () => {
     expect(getSessionMock).toHaveBeenCalledWith({
       headers: context.request.headers,
       query: { disableCookieCache: true },
+      returnHeaders: true,
     });
   });
 });

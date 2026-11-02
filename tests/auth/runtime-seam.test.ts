@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 const { createAuthFromEnvMock, resolveRouteAccessMock } = vi.hoisted(() => ({
   createAuthFromEnvMock: vi.fn(() => ({
     api: {
-      getSession: vi.fn(async () => null),
+      getSession: vi.fn(async () => ({ response: null, headers: new Headers() })),
     },
     handler: vi.fn(async () => new Response('auth response')),
   })),

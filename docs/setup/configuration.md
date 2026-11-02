@@ -23,6 +23,7 @@ Use `src/config` when changing values that the app code should import directly:
 - `src/config/app.ts`: app identity and default navigation paths.
 - `src/config/auth.ts`: middleware route policy, admin route policy, app roles,
   app permission values, browser auth fallback copy, and banned-session copy.
+- `src/config/auth-options.ts`: session expiry and renewal defaults.
 - `src/config/auth-email.ts`: transactional auth email rendering and sender
   defaults.
 - `src/config/schema.ts`: Drizzle D1 table definitions shared by app code,
@@ -69,3 +70,14 @@ npx wrangler secret put MAILGUN_API_KEY
 
 Only configure provider-specific secrets for the email provider the environment
 actually uses.
+
+## Session Expiry
+
+The login form selects "Remember me" by default. Remembered sessions last 365 days and renew with activity once per day.
+Without "Remember me", sessions expire after 24 hours and use a browser session cookie.
+The browser can discard this cookie when its session ends.
+
+Middleware forwards renewed cookies to the browser. This also extends older remembered cookies when users return before expiry.
+
+The auth handler and middleware share these defaults through `src/config/auth-options.ts`.
+Existing apps need the same configuration and middleware changes or a later starter release.

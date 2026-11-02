@@ -1,3 +1,4 @@
+import { extendAuthOptions } from '@/config/auth-options';
 import type { APIRoute } from 'astro';
 import {
   createSignOutAuthRequest,
@@ -23,6 +24,7 @@ export const ALL: APIRoute = async ({ request }) => {
     database: db,
     schema,
     authConfig,
+    extendOptions: extendAuthOptions,
     authEmailOptions,
     drizzle: {
       provider: authDatabaseProvider,

@@ -1,3 +1,4 @@
+import { extendAuthOptions } from '@/config/auth-options';
 import { defineMiddleware } from 'astro:middleware';
 import {
   createAuthFromEnv,
@@ -25,6 +26,16 @@ export const onRequest = defineMiddleware(async (context, next) => {
   context.locals.session = null;
   context.locals.isAuthenticated = false;
 
+  let sessionHeaders: Headers | undefined;
+  async function withSessionCookies(response: Response | Promise<Response>) {
+    const result = await response;
+    // Server-side session refreshes must also renew the browser's cookie.
+    for (const cookie of sessionHeaders?.getSetCookie() ?? []) {
+      result.headers.append('set-cookie', cookie);
+    }
+    return result;
+  }
+
   let sessionPromise: ReturnType<App.Locals['loadAuthSession']> | undefined;
   context.locals.loadAuthSession = () => {
     sessionPromise ??= (async () => {
@@ -34,14 +45,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
         database: db,
         schema,
         authConfig,
+        extendOptions: extendAuthOptions,
         drizzle: {
           provider: authDatabaseProvider,
         },
       });
-      const session = await auth.api.getSession({
+      const { response: session, headers } = await auth.api.getSession({
         headers: context.request.headers,
         query: isAdminPath ? { disableCookieCache: true } : undefined,
+        returnHeaders: true,
       });
+      sessionHeaders = headers;
 
       context.locals.user = session?.user ?? null;
       context.locals.session = session?.session ?? null;
@@ -54,14 +68,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
   };
 
   if (isAuthApiRoute(authConfig, routePath)) {
-    return next();
+    return withSessionCookies(next());
   }
 
   // Cookie presence is only a cheap gate; protected routes validate below.
   const hasCandidateSession = getSessionCookie(context.request) !== null;
 
   if (!hasCandidateSession && !isProtectedPath) {
-    return next();
+    return withSessionCookies(next());
   }
 
   if (
@@ -69,7 +83,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     !isProtectedPath &&
     !authAwarePublicPaths.has(requestURL.pathname)
   ) {
-    return next();
+    return withSessionCookies(next());
   }
 
   if (hasCandidateSession) {
@@ -82,12 +96,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
   });
 
   if (access.type === 'allow') {
-    return next();
+    return withSessionCookies(next());
   }
 
   if (access.type === 'forbidden') {
-    return new Response('Forbidden', { status: 403 });
+    return withSessionCookies(new Response('Forbidden', { status: 403 }));
   }
 
-  return context.redirect(access.location);
+  return withSessionCookies(context.redirect(access.location));
 });

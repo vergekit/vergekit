@@ -257,18 +257,24 @@ describe('minimal auth UI contract', () => {
     expect(layoutSource).toContain('value={appConfig.homePath}');
   });
 
-  it('provides standalone error pages for missing routes and server failures', () => {
-    const notFoundSource = readProjectFile('src/pages/404.astro');
+  it('shares a standalone template across missing-page and server errors', () => {
+    const layoutSource = readProjectFile('src/layouts/ErrorLayout.astro');
+
+    expect(layoutSource).toContain('<title>{status} - {title}</title>');
+    expect(layoutSource).toContain('font-family: -apple-system');
+    expect(layoutSource).toContain('<Favicon />');
+    expect(layoutSource).not.toContain('AuthenticatedLayout');
+
+    for (const status of [404, 500]) {
+      const source = readProjectFile(`src/pages/${status}.astro`);
+      expect(source).toContain('@/layouts/ErrorLayout.astro');
+      expect(source).toContain(`Astro.response.status = ${status}`);
+      expect(source).toContain(`status={${status}}`);
+    }
+
+    expect(readProjectFile('src/pages/404.astro')).toContain('This page could not be found.');
     const serverErrorSource = readProjectFile('src/pages/500.astro');
-
-    expect(notFoundSource).toContain('<title>404 - NOT FOUND</title>');
-    expect(notFoundSource).toContain('This page could not be found.');
-    expect(notFoundSource).toContain('font-family: -apple-system');
-
-    expect(serverErrorSource).toContain('<title>500 - SERVER ERROR</title>');
-    expect(serverErrorSource).toContain(
-      'An error occurred on the server.',
-    );
-    expect(serverErrorSource).toContain('interface Props');
+    expect(serverErrorSource).toContain('An error occurred on the server.');
+    expect(serverErrorSource).not.toContain('error.message');
   });
 });
