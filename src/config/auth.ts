@@ -8,7 +8,7 @@ export const authConfig = defineAuthConfig({
   routes: {
     authApiPrefix: '/api/auth',
     loginPath: '/login',
-    protectedExactPaths: ['/dashboard'],
+    protectedExactPaths: ['/dashboard', '/account'],
     protectedPrefixes: [],
     adminExactPaths: ['/admin'],
     adminPrefixes: ['/admin/'],

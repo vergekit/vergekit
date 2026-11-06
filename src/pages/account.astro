@@ -1,0 +1,36 @@
+---
+import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.astro';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Field, FieldLabel } from '@/components/ui/field';
+import { appConfig } from '@/config/app';
+import { authConfig } from '@/config/auth';
+const user = Astro.locals.user!;
+---
+
+<AuthenticatedLayout title={`Your account | ${appConfig.name}`}>
+  <section class="mx-auto w-full max-w-xl px-4 py-8 sm:px-6">
+    <h1 class="mb-6 text-2xl font-semibold">Your account</h1>
+    {Astro.url.searchParams.has('saved') && <p role="status" class="mb-4">Your email has been updated.</p>}
+    <form method="post" action={`${authConfig.routes.authApiPrefix}/change-email-direct`}
+      data-auth-form data-auth-error="account-error" data-auth-success-url="/account?saved=1"
+      class="space-y-5 rounded-xl border border-slate-200 bg-white p-6">
+      <p id="account-error" role="alert" aria-live="polite" hidden class="text-sm text-red-700"></p>
+      <Field>
+        <FieldLabel for="account-email">Email</FieldLabel>
+        <Input id="account-email" name="newEmail" type="email" autocomplete="email" value={user.email} maxlength={255} required />
+      </Field>
+      <Button type="submit">Save email</Button>
+    </form>
+  </section>
+</AuthenticatedLayout>
+
+<script>
+  import { mountAuthForms } from '@vergekit/core/auth';
+  import { authConfig } from '@/config/auth';
+  function setupAccountForm() {
+    mountAuthForms(document, { defaultErrorMessage: authConfig.browser.defaultErrorMessage, defaultSuccessRedirect: '/account?saved=1' });
+  }
+  setupAccountForm();
+  document.addEventListener('astro:page-load', setupAccountForm);
+</script>

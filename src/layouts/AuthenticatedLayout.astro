@@ -21,6 +21,7 @@ const { title = appConfig.name } = Astro.props;
         <span>{appConfig.name}</span>
       </a>
 
+      <a href="/account" class="ml-auto mr-4 text-sm hover:underline">Your account</a>
       <form method="post" action="/api/auth/sign-out">
         <input type="hidden" name="redirectTo" value={appConfig.homePath} />
         <Button

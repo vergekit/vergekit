@@ -21,7 +21,7 @@ describe('auth config', () => {
     expect(authConfig.routes).toMatchObject({
       authApiPrefix: '/api/auth',
       loginPath: '/login',
-      protectedExactPaths: ['/dashboard'],
+      protectedExactPaths: ['/dashboard', '/account'],
       protectedPrefixes: [],
       adminExactPaths: ['/admin'],
       adminPrefixes: ['/admin/'],

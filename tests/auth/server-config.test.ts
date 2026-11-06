@@ -1,3 +1,4 @@
+import { schemaCheckFor } from '@better-auth/core/db/internal';
 import { describe, expect, it, vi } from 'vitest';
 import {
   buildAuthOptions,
@@ -66,6 +67,19 @@ describe('Better Auth server config', () => {
     });
 
     expect(auth.handler).toBeTypeOf('function');
+  });
+
+  it('accepts the existing auth schema under Better Auth 1.7 validation', async () => {
+    const auth = createAuth({
+      database, schema, authConfig,
+      baseURL: 'https://vk.example.com',
+      secret: 'test-secret-with-at-least-32-characters',
+      drizzle: { provider: 'sqlite' },
+    });
+    const context = await auth.$context;
+    const check = schemaCheckFor(context.adapter);
+    expect(check).toBeTypeOf('function');
+    await expect(check!()).resolves.toBeUndefined();
   });
 
   it('resolves auth base URL from an explicit binding or the current request', () => {
